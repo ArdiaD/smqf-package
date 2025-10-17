@@ -1,0 +1,10 @@
+citHeader("To cite 'smqf' in publications use:")
+
+bibentry(bibtype = "Manual",
+  title  = "smqf: Statistical Methods in Quantitative Finance",
+  author = c(person("David","Ardia")),
+  year   = "2025",
+  organization = "CRAN",
+  textVersion = paste("Ardia, D. (2025).",
+    "smqf: Statistical Methods in Quantitative Finance")
+)
