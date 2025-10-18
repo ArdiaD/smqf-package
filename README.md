@@ -6,7 +6,7 @@
 Please cite the package in publications!\
 By using `smqf` you agree to the following rules:
 
--   You must cite the package as Ardia (2025). "tatistical Methods in Quantitative Finance", R package.
+-   You must cite the package as Ardia (2025). "Statistical Methods in Quantitative Finance", CRC Press.
 -   You assume all risk for the use of `smqf`.
 
 ------------------------------------------------------------------------

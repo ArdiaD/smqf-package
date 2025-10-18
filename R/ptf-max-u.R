@@ -3,7 +3,7 @@
 #' Solves for portfolio weights that (approximately) maximize expected utility
 #' using a fourth-order moment expansion in mean–variance–skewness–kurtosis
 #' (MVSK). The problem is solved via SLSQP with the constraints
-#' \eqn{\sum_i w_i = 1} and \eqn{0 \le w_i \le \texttt{w_max}}.
+#' \eqn{\sum_i w_i = 1} and \eqn{0 \le w_i \le w_max}.
 #'
 #' The objective implemented is the negative of the truncated MVSK utility
 #' series, so minimizing it is equivalent to maximizing the utility:
@@ -18,7 +18,7 @@
 #'
 #' @param gamma Non-negative numeric scalar risk-aversion parameter.
 #' @param w_max Numeric scalar in \eqn{(0,1]} giving the per-asset upper
-#'   bound: \eqn{0 \le w_i \le \texttt{w_max}}.
+#'   bound: \eqn{0 \le w_i \le w_max}.
 #' @param M1 Numeric vector of expected returns (length \eqn{d}).
 #' @param M2 Numeric \eqn{d \times d} covariance matrix.
 #' @param M3 Numeric third central moment tensor (array of dim \eqn{d \times d \times d}).

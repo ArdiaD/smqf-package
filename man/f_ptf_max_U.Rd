@@ -10,7 +10,7 @@ f_ptf_max_U(gamma, w_max, M1, M2, M3, M4)
 \item{gamma}{Non-negative numeric scalar risk-aversion parameter.}
 
 \item{w_max}{Numeric scalar in \eqn{(0,1]} giving the per-asset upper
-bound: \eqn{0 \le w_i \le \texttt{w_max}}.}
+bound: \eqn{0 \le w_i \le w_max}.}
 
 \item{M1}{Numeric vector of expected returns (length \eqn{d}).}
 
@@ -31,7 +31,7 @@ A list with:
 Solves for portfolio weights that (approximately) maximize expected utility
 using a fourth-order moment expansion in mean–variance–skewness–kurtosis
 (MVSK). The problem is solved via SLSQP with the constraints
-\eqn{\sum_i w_i = 1} and \eqn{0 \le w_i \le \texttt{w_max}}.
+\eqn{\sum_i w_i = 1} and \eqn{0 \le w_i \le w_max}.
 }
 \details{
 The objective implemented is the negative of the truncated MVSK utility

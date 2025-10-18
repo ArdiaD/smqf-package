@@ -59,7 +59,7 @@ ef$volatility[c(1, 20)]
 
 }
 \references{
-Markowitz, H. (1952). Portfolio Selection. \emph{The Journal of Finance}, 7(1), 77–91.
+Markowitz, H. (1952). Portfolio Selection. \emph{Journal of Finance}, 7(1), 77–91.
 }
 \seealso{
 \code{\link[pracma]{quadprog}}
