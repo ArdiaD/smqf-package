@@ -10,7 +10,7 @@
 book "Statistical Methods in Quantitative Finance" Ardia (2025).
 }
 \references{
-\insertRef{Ardia2025}{smqf} \cr
+David Ardia (2025). *Statistical Methods in Quantitative Finance*. CRC Press.
 }
 \seealso{
 Useful links:

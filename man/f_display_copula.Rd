@@ -4,7 +4,7 @@
 \alias{f_display_copula}
 \title{Display a Bivariate Copula Surface}
 \usage{
-f_display_copula(my_copula, grid_1, grid_2, type = 1)
+f_display_copula(my_copula, grid_1, grid_2)
 }
 \arguments{
 \item{my_copula}{A function that takes a numeric vector \code{c(u1, u2)} as input
@@ -12,12 +12,6 @@ and returns a scalar value (e.g., a copula PDF or CDF).}
 
 \item{grid_1, grid_2}{Numeric vectors defining the evaluation grid for
 \eqn{u_1} and \eqn{u_2} in the interval \eqn{[0,1]}.}
-
-\item{type}{Integer indicating the plotting method:
-\describe{
-  \item{1}{(default) Static 3D surface plot via \code{persp()}.}
-  \item{2}{Interactive 3D plot via \code{rgl::persp3d()}.}
-}}
 }
 \value{
 Invisibly returns the matrix of evaluated copula values
@@ -40,8 +34,7 @@ grid <- seq(0.05, 0.95, length.out = 25)
 f_display_copula(
   my_copula = function(u) f_clayton_copula_2d_pdf(u, theta = 2),
   grid_1 = grid,
-  grid_2 = grid,
-  type = 1
+  grid_2 = grid
 )
 
 }

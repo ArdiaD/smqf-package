@@ -42,17 +42,18 @@
 #'
 #' f_tail_dependence(x, y, alpha = 0.05)
 #'
+#' @importFrom stats cor quantile
 #' @export
 f_tail_dependence <- function(x, y, alpha) {
 
-  idx_x <- x < quantile(x, alpha)
-  idx_y <- y < quantile(y, alpha)
+  idx_x <- x < stats::quantile(x, alpha)
+  idx_y <- y < stats::quantile(y, alpha)
 
   sumx  <- sum(idx_x & idx_y)
 
   if (sumx > 0) {
     lambda <- sumx / sum(idx_x | idx_y)
-    excorr <- cor(x[idx_x & idx_y], y[idx_x & idx_y])
+    excorr <- stats::cor(x[idx_x & idx_y], y[idx_x & idx_y])
   } else {
     lambda <- 0
     excorr <- NA

@@ -15,9 +15,9 @@
 #'
 #' @return A list with components:
 #' \describe{
-#'   \item{weights}{Numeric matrix \eqn{N \times n\_ptf}: portfolio weights.}
-#'   \item{volatility}{Numeric length-\eqn{n\_ptf}: portfolio standard deviations.}
-#'   \item{expected\_returns}{Numeric length-\eqn{n\_ptf}: portfolio expected returns.}
+#'   \item{weights}{Numeric matrix \eqn{N \times n_ptf}: portfolio weights.}
+#'   \item{volatility}{Numeric length-\eqn{n_ptf}: portfolio standard deviations.}
+#'   \item{expected_returns}{Numeric length-\eqn{n_ptf}: portfolio expected returns.}
 #' }
 #'
 #' @details
