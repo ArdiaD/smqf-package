@@ -60,9 +60,9 @@
 #' }
 #'
 #' @importFrom nloptr nloptr
+#' @import PerformanceAnalytics
 #' @export
 f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
-  library("nloptr")
 
   d <- length(M1)
 
@@ -76,15 +76,15 @@ f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
 
   f_obj <- function(w) {
     mom1 <- sum(w * M1)
-    mom2 <- PerformanceAnalytics:::portm2(w, M2)
-    mom3 <- PerformanceAnalytics:::portm3(w, M3)
-    mom4 <- PerformanceAnalytics:::portm4(w, M4)
+    mom2 <- PerformanceAnalytics::portm2(w, M2)
+    mom3 <- PerformanceAnalytics::portm3(w, M3)
+    mom4 <- PerformanceAnalytics::portm4(w, M4)
     obj <- -mom1 + gamma * mom2 / 2 - gamma * (gamma + 1) * mom3 / 6 + gamma * (gamma + 1) * (gamma + 2) * mom4 / 24
 
     momsgrad1 <- M1
-    momsgrad2 <- PerformanceAnalytics:::derportm2(w, M2)
-    momsgrad3 <- PerformanceAnalytics:::derportm3(w, M3)
-    momsgrad4 <- PerformanceAnalytics:::derportm4(w, M4)
+    momsgrad2 <- PerformanceAnalytics::derportm2(w, M2)
+    momsgrad3 <- PerformanceAnalytics::derportm3(w, M3)
+    momsgrad4 <- PerformanceAnalytics::derportm4(w, M4)
     gr <- -M1 + gamma * momsgrad2 / 2 - gamma * (gamma + 1) * momsgrad3 / 6 + gamma * (gamma + 1) * (gamma + 2) * momsgrad4 / 24
 
     out <- list("objective" = obj,

@@ -44,14 +44,6 @@
 #'
 #' @export
 f_tail_dependence <- function(x, y, alpha) {
-  # Calculate lower tail-dependence coefficient for two time series
-  # INPUTS
-  #  x        : [vector] (n x 1)
-  #  y        : [vector] (n x 1)
-  #  alpha    : [scalar] threshold
-  # OUTPUTS
-  #  lambda   : [scalar] tail-dependence coefficient
-  #  excorr   : [scalar] exceedance correlation
 
   idx_x <- x < quantile(x, alpha)
   idx_y <- y < quantile(y, alpha)

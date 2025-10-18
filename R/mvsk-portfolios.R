@@ -16,8 +16,8 @@
 #' @param lin_eqC Numeric vector for \code{lin_eq}.
 #' @param nlin_eq Function returning a list with components \code{constraints}
 #'   and \code{jacobian} for nonlinear equalities in \code{w}; may be \code{NULL}.
-#' @param lin_ieq,lin_ieqC Analogous objects for linear \emph{inequalities}
-#'   (left side minus right side \eqn{\le 0}).
+#' @param lin_ieq Analogous objects for linear \emph{inequalities} (left side minus right side \eqn{\le 0}).
+#' @param lin_ieqC Analogous objects for linear \emph{inequalities} (left side minus right side \eqn{\le 0}).
 #' @param nlin_ieq Function returning a list with \code{constraints} and
 #'   \code{jacobian} for nonlinear inequalities; may be \code{NULL}.
 #' @param options Named list of \pkg{nloptr} options. Defaults are filled for
@@ -51,7 +51,7 @@
 #'
 #' @importFrom nloptr nloptr
 #' @export
-f_solvePortfolio <- function (p, w0, m1, M2, M3, M4, lb, ub, lin_eq, lin_eqC, nlin_eq,
+f_solvePortfolio <- function(p, w0, m1, M2, M3, M4, lb, ub, lin_eq, lin_eqC, nlin_eq,
           lin_ieq, lin_ieqC, nlin_ieq, options, param)
 {
   if (!("maxeval" %in% names(options)))
@@ -145,7 +145,7 @@ f_solvePortfolio <- function (p, w0, m1, M2, M3, M4, lb, ub, lin_eq, lin_eqC, nl
 #'
 #' @importFrom nloptr nloptr
 #' @export
-f_solveMVSKPortfolio <- function (p, w0, g, m1, M2, M3, M4, indmom, lb, ub, lin_eq, lin_eqC,
+f_solveMVSKPortfolio <- function(p, w0, g, m1, M2, M3, M4, indmom, lb, ub, lin_eq, lin_eqC,
           nlin_eq, lin_ieq, lin_ieqC, nlin_ieq, options, href, kappa,
           relative, param, mompref)
 {

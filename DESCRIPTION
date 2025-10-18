@@ -23,6 +23,7 @@ Imports:
     nloptr,
     pracma,
     quadprog,
+    PerformanceAnalytics,
     rgl
 RdMacros:
     Rdpack
