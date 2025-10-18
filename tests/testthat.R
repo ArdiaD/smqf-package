@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(spantest)
+library(smqf)
 
-test_check("spantest")
+test_check("smqf")
