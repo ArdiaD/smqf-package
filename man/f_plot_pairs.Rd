@@ -30,7 +30,9 @@ The function arranges an \eqn{N \times N} grid of panels:
 The number of histogram bins is chosen as \eqn{\mathrm{round}(10 \log T)}.
 
 The graphical layout is set with \code{par(mfrow = c(N, N))} and margin
-adjustment; all plots use blue points or bars.
+adjustment; all plots use blue points or bars. The previous \code{par()}
+settings are saved on entry and automatically restored on exit via
+\code{on.exit()}.
 }
 \examples{
 set.seed(1)

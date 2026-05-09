@@ -2,41 +2,53 @@
 % Please edit documentation in R/tail-dependence.R
 \name{f_tail_dependence}
 \alias{f_tail_dependence}
-\title{Empirical Lower Tail Dependence and Exceedance Correlation}
+\title{Empirical Tail Dependence and Exceedance Correlation}
 \usage{
-f_tail_dependence(x, y, alpha)
+f_tail_dependence(x, y, alpha, side = c("lower", "upper"))
 }
 \arguments{
 \item{x}{Numeric vector of length \eqn{n}, first variable or return series.}
 
 \item{y}{Numeric vector of length \eqn{n}, second variable or return series.}
 
-\item{alpha}{Numeric scalar in \eqn{(0,1)}, the lower‐tail probability level
-(e.g. \code{0.01} for the 1\% lower tail).}
+\item{alpha}{Numeric scalar in \eqn{(0,1)}, the tail probability level
+(e.g. \code{0.05} for the 5\% tail).}
+
+\item{side}{Character string, either \code{"lower"} (default) or
+\code{"upper"}, indicating which tail to analyse.
+\code{"lower"} conditions on \eqn{X < F_X^{-1}(\alpha)};
+\code{"upper"} conditions on \eqn{X > F_X^{-1}(1 - \alpha)}.}
 }
 \value{
 A list with components:
 \describe{
-  \item{\code{lambda}}{Empirical lower tail‐dependence coefficient:
-    \deqn{\lambda_L = P(X < F_X^{-1}(\alpha),\; Y < F_Y^{-1}(\alpha)) \,/\,
-                   P(X < F_X^{-1}(\alpha)\; \text{or}\; Y < F_Y^{-1}(\alpha)).}}
+  \item{\code{lambda}}{Empirical tail‐dependence coefficient.
+    For \code{side = "lower"}:
+    \deqn{\hat{\lambda}_L
+      = \frac{\#\{X < q_\alpha^X \text{ and } Y < q_\alpha^Y\}}
+             {\#\{X < q_\alpha^X\}}.}
+    For \code{side = "upper"}:
+    \deqn{\hat{\lambda}_U
+      = \frac{\#\{X > q_{1-\alpha}^X \text{ and } Y > q_{1-\alpha}^Y\}}
+             {\#\{X > q_{1-\alpha}^X\}}.}}
   \item{\code{excorr}}{Exceedance correlation between \code{x} and \code{y}
-    in the joint lower tail (computed only if there are joint exceedances).}
+    in the joint tail (computed only if there are joint exceedances).}
 }
 }
 \description{
-Estimates the empirical lower tail‐dependence coefficient and the
+Estimates the empirical tail‐dependence coefficient and the
 exceedance correlation between two series at a given quantile threshold
-\eqn{\alpha}.
+\eqn{\alpha} for either the lower or upper tail.
 }
 \details{
-The function classifies observations in the lower \eqn{\alpha}‐quantile of
+The function classifies observations in the \eqn{\alpha}‐quantile tail of
 each margin and computes:
 \itemize{
-  \item the proportion of simultaneous lower‐tail events relative to the
-    union of lower‐tail events (\code{lambda}), and
+  \item the standard empirical tail‐dependence coefficient: the
+    proportion of joint tail events \emph{conditional on} \code{x}
+    being in its tail (\code{lambda}), and
   \item the sample correlation between the values of \code{x} and \code{y}
-    for which both lie in their respective lower tails (\code{excorr}).
+    for which both lie in their respective tails (\code{excorr}).
 }
 If no joint tail events are found, \code{lambda = 0} and
 \code{excorr = NA}.
@@ -47,10 +59,11 @@ x <- rnorm(1000)
 y <- 0.7 * x + sqrt(1 - 0.7^2) * rnorm(1000)
 
 f_tail_dependence(x, y, alpha = 0.05)
+f_tail_dependence(x, y, alpha = 0.05, side = "upper")
 
 }
 \references{
-Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
+Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
 Embrechts, P., McNeil, A. J., & Straumann, D. (2002). Correlation and dependence in risk management.
-*Risk Management: Value at Risk and Beyond*. Cambridge University Press.
+\emph{Risk Management: Value at Risk and Beyond}. Cambridge University Press.
 }

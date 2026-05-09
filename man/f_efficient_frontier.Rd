@@ -21,6 +21,10 @@ A list with components:
   \item{weights}{Numeric matrix \eqn{N \times n_ptf}: portfolio weights.}
   \item{volatility}{Numeric length-\eqn{n_ptf}: portfolio standard deviations.}
   \item{expected_returns}{Numeric length-\eqn{n_ptf}: portfolio expected returns.}
+  \item{frontier}{Data frame with columns \code{point} (integer index),
+    \code{expected_return}, and \code{volatility} for each frontier portfolio.}
+  \item{targets}{Numeric vector of length \eqn{n_ptf}: the target-return grid
+    used to trace the frontier.}
 }
 }
 \description{

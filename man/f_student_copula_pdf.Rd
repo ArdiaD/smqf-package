@@ -61,3 +61,7 @@ Demarta, S., & McNeil, A. J. (2005). The t Copula and Related Copulas.
 Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
 Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
 }
+\seealso{
+\code{\link{f_normal_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
+  \code{\link{f_gumbel_copula_2d_pdf}}
+}

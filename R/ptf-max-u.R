@@ -48,7 +48,6 @@
 #' Harvey, C. R., Liechty, J. C., Liechty, M. W., & Müller, P. (2010). Portfolio selection with higher moments.
 #'
 #' @examples
-#' \dontrun{
 #' set.seed(1)
 #' d <- 3
 #' M1 <- c(0.06, 0.08, 0.07)
@@ -57,7 +56,6 @@
 #' M4 <- array(0, dim = c(d,d,d,d))
 #' res <- f_ptf_max_U(gamma = 5, w_max = 0.8, M1, M2, M3, M4)
 #' res$w; res$EU
-#' }
 #'
 #' @importFrom nloptr nloptr
 #' @import PerformanceAnalytics
@@ -76,15 +74,15 @@ f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
 
   f_obj <- function(w) {
     mom1 <- sum(w * M1)
-    mom2 <- PerformanceAnalytics::portm2(w, M2)
-    mom3 <- PerformanceAnalytics::portm3(w, M3)
-    mom4 <- PerformanceAnalytics::portm4(w, M4)
+    mom2 <- PerformanceAnalytics:::portm2(w, M2)
+    mom3 <- PerformanceAnalytics:::portm3(w, M3)
+    mom4 <- PerformanceAnalytics:::portm4(w, M4)
     obj <- -mom1 + gamma * mom2 / 2 - gamma * (gamma + 1) * mom3 / 6 + gamma * (gamma + 1) * (gamma + 2) * mom4 / 24
 
     momsgrad1 <- M1
-    momsgrad2 <- PerformanceAnalytics::derportm2(w, M2)
-    momsgrad3 <- PerformanceAnalytics::derportm3(w, M3)
-    momsgrad4 <- PerformanceAnalytics::derportm4(w, M4)
+    momsgrad2 <- PerformanceAnalytics:::derportm2(w, M2)
+    momsgrad3 <- PerformanceAnalytics:::derportm3(w, M3)
+    momsgrad4 <- PerformanceAnalytics:::derportm4(w, M4)
     gr <- -M1 + gamma * momsgrad2 / 2 - gamma * (gamma + 1) * momsgrad3 / 6 + gamma * (gamma + 1) * (gamma + 2) * momsgrad4 / 24
 
     out <- list("objective" = obj,

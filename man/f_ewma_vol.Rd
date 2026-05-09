@@ -15,8 +15,16 @@ is the number of observations and \eqn{c} the number of series.}
 available rows. If \code{TRUE}, returns the full history (rolling) of EWMA
 volatilities computed at each time \eqn{t=1,\dots,r}.}
 
-\item{lambda}{Numeric decay parameter. Larger values put more weight on recent
-observations. See Details for half-life mapping.}
+\item{lambda}{Numeric decay parameter. The effect of \code{lambda} on
+recency depends on \code{type}:
+\itemize{
+  \item \code{"Riskmetrics"}: \emph{smaller} values put more weight on
+    recent observations (shorter half-life). The standard RiskMetrics
+    value is 0.94.
+  \item \code{"Meucci"}: \emph{larger} values put more weight on recent
+    observations (sharper exponential decay toward old data).
+}
+See Details for the half-life mapping.}
 
 \item{type}{Character string selecting the weights:
 \itemize{

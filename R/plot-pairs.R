@@ -19,7 +19,9 @@
 #' The number of histogram bins is chosen as \eqn{\mathrm{round}(10 \log T)}.
 #'
 #' The graphical layout is set with \code{par(mfrow = c(N, N))} and margin
-#' adjustment; all plots use blue points or bars.
+#' adjustment; all plots use blue points or bars. The previous \code{par()}
+#' settings are saved on entry and automatically restored on exit via
+#' \code{on.exit()}.
 #'
 #' @return Invisibly returns \code{NULL}. Used for its side-effect of producing a multi-panel plot.
 #'
@@ -41,9 +43,9 @@ f_plot_pairs <- function(rets) {
   T   <- Dim[1]
   N   <- Dim[2]
 
-  nbins <- round(10 * log(T))
-  par(mar = c(3, 2, 1.5, 1))
-  par(mfrow = c(N, N))
+  nbins   <- round(10 * log(T))
+  old_par <- par(mar = c(3, 2, 1.5, 1), mfrow = c(N, N))
+  on.exit(par(old_par), add = TRUE)
 
   for (i in 1:N) {
     for (j in 1:N) {

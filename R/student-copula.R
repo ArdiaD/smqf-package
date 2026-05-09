@@ -48,6 +48,8 @@
 #' # Compare to Gaussian copula (nu large)
 #' f_student_copula_pdf(c(0.6, 0.8), mu, Sigma, nu = 100)
 #'
+#' @seealso \code{\link{f_normal_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
+#'   \code{\link{f_gumbel_copula_2d_pdf}}
 #' @importFrom stats qt dt
 #' @importFrom pracma mldivide
 #' @export

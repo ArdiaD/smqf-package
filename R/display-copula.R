@@ -1,8 +1,7 @@
 #' Display a Bivariate Copula Surface
 #'
 #' Evaluates and displays a bivariate copula function (typically a PDF or CDF)
-#' on a 2D grid, producing either a static 3D surface via base R's
-#' [\code{persp()}] or an interactive 3D plot using the \pkg{rgl} package.
+#' on a 2D grid, producing a static 3D surface via base R's \code{persp()}.
 #'
 #' @param my_copula A function that takes a numeric vector \code{c(u1, u2)} as input
 #'   and returns a scalar value (e.g., a copula PDF or CDF).
@@ -31,11 +30,12 @@
 #' @export
 f_display_copula <- function(my_copula, grid_1, grid_2) {
 
-  n_mesh <- length(grid_1)
+  n1 <- length(grid_1)
+  n2 <- length(grid_2)
 
-  f_U <- matrix(NA, n_mesh, n_mesh)
-  for (j in 1:n_mesh) {
-    for (k in 1:n_mesh) {
+  f_U <- matrix(NA, n1, n2)
+  for (j in seq_len(n1)) {
+    for (k in seq_len(n2)) {
       u <- c(grid_1[j], grid_2[k])
       f_U[j, k] <- my_copula(u)
     }

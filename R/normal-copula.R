@@ -47,6 +47,8 @@
 #' # Compare with independence (Sigma = I)
 #' f_normal_copula_pdf(c(0.5, 0.8), mu, diag(2))
 #'
+#' @seealso \code{\link{f_student_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
+#'   \code{\link{f_gumbel_copula_2d_pdf}}
 #' @importFrom stats qnorm dnorm
 #' @importFrom pracma mldivide mrdivide
 #' @export

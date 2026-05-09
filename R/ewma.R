@@ -9,8 +9,16 @@
 #' @param history Logical. If \code{FALSE}, returns the EWMA volatility using all
 #'   available rows. If \code{TRUE}, returns the full history (rolling) of EWMA
 #'   volatilities computed at each time \eqn{t=1,\dots,r}.
-#' @param lambda Numeric decay parameter. Larger values put more weight on recent
-#'   observations. See Details for half-life mapping.
+#' @param lambda Numeric decay parameter. The effect of \code{lambda} on
+#'   recency depends on \code{type}:
+#'   \itemize{
+#'     \item \code{"Riskmetrics"}: \emph{smaller} values put more weight on
+#'       recent observations (shorter half-life). The standard RiskMetrics
+#'       value is 0.94.
+#'     \item \code{"Meucci"}: \emph{larger} values put more weight on recent
+#'       observations (sharper exponential decay toward old data).
+#'   }
+#'   See Details for the half-life mapping.
 #' @param type Character string selecting the weights:
 #'   \itemize{
 #'     \item \code{"Riskmetrics"}: \eqn{w_t \propto \lambda^{t-1}}, normalized over \eqn{r}.
@@ -57,8 +65,8 @@ f_ewma_vol <- function(rets, history, lambda, type) {
   #    Nov 2012
   #    Dec 2012
   #    Jan 2013
-  #    Default half-life decay solves: exp(-lambda * T/2) = 1/2
-  #    The largets the lambda, the more weight have recent observations
+  #    For the Meucci convention, a larger lambda gives more weight to
+  #    recent observations (see @param lambda in the roxygen docs).
 
   size <- dim(rets)
   r <- size[1]

@@ -1,7 +1,7 @@
 #' Gumbel Copula CDF (2-Dimensional)
 #'
 #' Computes the bivariate Gumbel copula cumulative distribution function (CDF)
-#' at \eqn{(u_1,u_2)} for dependence parameter \eqn{\theta} (here `k1`).
+#' at \eqn{(u_1,u_2)} for dependence parameter \eqn{\theta \ge 1}.
 #'
 #' The Gumbel copula exhibits upper-tail dependence
 #' \eqn{\lambda_U = 2 - 2^{1/\theta}} and no lower-tail dependence
@@ -10,7 +10,7 @@
 #'
 #' @param u Numeric vector of length 2 with entries in \eqn{(0,1]}:
 #'   the evaluation point \eqn{(u_1,u_2)}.
-#' @param k1 Numeric scalar, the Gumbel dependence parameter \eqn{\theta \ge 1}.
+#' @param theta Numeric scalar, the Gumbel dependence parameter \eqn{\theta \ge 1}.
 #'
 #' @return A numeric scalar: \eqn{C(u_1,u_2;\theta)}.
 #'
@@ -24,29 +24,31 @@
 #' }
 #'
 #' @references
-#' Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
-#' Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
+#' Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
+#' Nelsen, R. B. (2006). \emph{An Introduction to Copulas} (2nd ed.). Springer.
 #'
 #' @examples
-#' f_gumbel_copula_2d_cdf(c(0.5, 0.8), k1 = 2)
-#' f_gumbel_copula_2d_cdf(c(0.7, 0.7), k1 = 1)  # independence: ~0.49
+#' f_gumbel_copula_2d_cdf(c(0.5, 0.8), theta = 2)
+#' f_gumbel_copula_2d_cdf(c(0.7, 0.7), theta = 1)  # independence: ~0.49
 #'
+#' @seealso \code{\link{f_gumbel_copula_2d_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
+#'   \code{\link{f_normal_copula_pdf}}, \code{\link{f_student_copula_pdf}}
 #' @export
-f_gumbel_copula_2d_cdf <- function(u, k1) {
+f_gumbel_copula_2d_cdf <- function(u, theta) {
   u1  <- u[1]
   u2  <- u[2]
-  cdf <- exp(-((-log(u1))^k1 + (-log(u2))^k1)^(k1^(-1)))
+  cdf <- exp(-((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1)))
   cdf
 }
 
 #' Gumbel Copula PDF (2-Dimensional)
 #'
 #' Computes the bivariate Gumbel copula probability density function (PDF)
-#' at \eqn{(u_1,u_2)} for dependence parameter \eqn{\theta} (here `k1`).
+#' at \eqn{(u_1,u_2)} for dependence parameter \eqn{\theta \ge 1}.
 #'
 #' @param u Numeric vector of length 2 with entries in \eqn{(0,1]}:
 #'   the evaluation point \eqn{(u_1,u_2)}.
-#' @param k1 Numeric scalar, the Gumbel dependence parameter \eqn{\theta \ge 1}.
+#' @param theta Numeric scalar, the Gumbel dependence parameter \eqn{\theta \ge 1}.
 #'
 #' @return A numeric scalar: \eqn{c(u_1,u_2;\theta)}.
 #'
@@ -65,21 +67,23 @@ f_gumbel_copula_2d_cdf <- function(u, k1) {
 #' @note Numerical stability may degrade as \eqn{u_i \to 0^+} (large \eqn{-\log u_i}).
 #'
 #' @references
-#' Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
-#' Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
+#' Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
+#' Nelsen, R. B. (2006). \emph{An Introduction to Copulas} (2nd ed.). Springer.
 #'
 #' @examples
-#' f_gumbel_copula_2d_pdf(c(0.5, 0.8), k1 = 2)
-#' f_gumbel_copula_2d_pdf(c(0.7, 0.7), k1 = 1)  # independence: 1
+#' f_gumbel_copula_2d_pdf(c(0.5, 0.8), theta = 2)
+#' f_gumbel_copula_2d_pdf(c(0.7, 0.7), theta = 1)  # independence: 1
 #'
+#' @seealso \code{\link{f_gumbel_copula_2d_cdf}}, \code{\link{f_clayton_copula_2d_pdf}},
+#'   \code{\link{f_normal_copula_pdf}}, \code{\link{f_student_copula_pdf}}
 #' @export
-f_gumbel_copula_2d_pdf <- function(u, k1) {
+f_gumbel_copula_2d_pdf <- function(u, theta) {
   u1 <- u[1]
   u2 <- u[2]
 
-  pdf <- f_gumbel_copula_2d_cdf(u, k1) * ((u1 * u2)^(-1)) *
-    (((-log(u1)) * (-log(u2)))^(k1 - 1))
-  pdf <- pdf * (((-log(u1))^k1 + (-log(u2))^k1)^(k1^(-1) - 2))
-  pdf <- pdf * ((((-log(u1))^k1 + (-log(u2))^k1)^(k1^(-1))) + k1 - 1)
+  pdf <- f_gumbel_copula_2d_cdf(u, theta) * ((u1 * u2)^(-1)) *
+    (((-log(u1)) * (-log(u2)))^(theta - 1))
+  pdf <- pdf * (((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1) - 2))
+  pdf <- pdf * ((((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1))) + theta - 1)
   pdf
 }

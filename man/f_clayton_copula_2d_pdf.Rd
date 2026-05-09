@@ -45,7 +45,11 @@ f_clayton_copula_2d_pdf(c(0.5, 0.5), theta = 2)
 
 }
 \references{
-- Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
-- Patton, A. (2006). *Modelling Asymmetric Exchange Rate Dependence*.
-  *International Economic Review*, 47(2), 527–556.
+- Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
+- Patton, A. (2006). Modelling Asymmetric Exchange Rate Dependence.
+  \emph{International Economic Review}, 47(2), 527–556.
+}
+\seealso{
+\code{\link{f_gumbel_copula_2d_pdf}}, \code{\link{f_normal_copula_pdf}},
+  \code{\link{f_student_copula_pdf}}
 }
