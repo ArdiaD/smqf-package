@@ -12,7 +12,7 @@
 #' @param u Numeric vector of length 2, containing values in the interval
 #'   \eqn{(0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.
 #' @param theta Numeric scalar giving the dependence parameter
-#'   (\eqn{\theta > 0}). Values near zero approximate independence.
+#'   (\eqn{\theta \ge 0}). The value \eqn{\theta = 0} is the independence limit.
 #'
 #' @return A numeric value corresponding to the Clayton copula PDF evaluated
 #'   at the specified point.

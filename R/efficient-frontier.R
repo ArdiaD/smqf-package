@@ -63,8 +63,12 @@ f_efficient_frontier <- function(mu, Sigma, n_ptf) {
   if (!is.matrix(Sigma) || nrow(Sigma) != length(mu) || ncol(Sigma) != length(mu)) {
     stop("`Sigma` must be an N x N matrix matching length(mu).", call. = FALSE)
   }
-  if (!is.numeric(n_ptf) || length(n_ptf) != 1L || n_ptf < 2) {
+  if (!is.numeric(n_ptf) || length(n_ptf) != 1L || n_ptf < 2 ||
+      n_ptf != as.integer(n_ptf)) {
     stop("`n_ptf` must be an integer >= 2.", call. = FALSE)
+  }
+  if (any(!is.finite(Sigma))) {
+    stop("`Sigma` must contain only finite values.", call. = FALSE)
   }
   N <- length(mu)
 

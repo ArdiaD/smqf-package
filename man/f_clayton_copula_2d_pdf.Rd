@@ -11,7 +11,7 @@ f_clayton_copula_2d_pdf(u, theta)
 \eqn{(0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.}
 
 \item{theta}{Numeric scalar giving the dependence parameter
-(\eqn{\theta > 0}). Values near zero approximate independence.}
+(\eqn{\theta \ge 0}). The value \eqn{\theta = 0} is the independence limit.}
 }
 \value{
 A numeric value corresponding to the Clayton copula PDF evaluated

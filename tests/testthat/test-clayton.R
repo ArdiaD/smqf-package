@@ -1,3 +1,10 @@
+test_that("f_clayton_copula_2d_pdf validates inputs", {
+  expect_error(f_clayton_copula_2d_pdf(c(0.3, 0.4), theta = -1),
+               "theta")
+  expect_error(f_clayton_copula_2d_pdf(c(-0.1, 0.4), theta = 1),
+               "u")
+})
+
 test_that("baseline value matches closed-form", {
   expect_equal(
     f_clayton_copula_2d_pdf(c(0.5, 0.5), 2),

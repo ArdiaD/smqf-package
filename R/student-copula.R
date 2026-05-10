@@ -56,32 +56,22 @@
 #' @importFrom pracma mldivide
 #' @export
 f_student_copula_pdf <- function (u, mu, Sigma, nu) {
-  # Pdf of the copula of the Student t distribution at the generic point
-  # u in the unit hypercube
-  # INPUTS
-  #   u     : [vector] (J x 1) grade
-  #   Mu    : [vector] (N x 1) mean
-  #   Sigma : [matrix] (N x N) scatter
-  #   nu    : [scalar] degrees of freedom
-  # OUTPUTS
-  #   F_U   : [vector] (J x 1) PDF
 
   ## --- input validation ---
   if (!is.numeric(u) || length(u) == 0L || any(u <= 0) || any(u >= 1))
     stop("'u' must be a numeric vector with all entries in (0, 1).",
          call. = FALSE)
   N <- length(u)
-  if (!is.numeric(mu) || length(mu) != N)
-    stop("'mu' must be a numeric vector of the same length as 'u'.",
+  if (!is.numeric(mu) || length(mu) != N || any(!is.finite(mu)))
+    stop("'mu' must be a finite numeric vector of the same length as 'u'.",
          call. = FALSE)
   if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
-      nrow(Sigma) != N || ncol(Sigma) != N)
-    stop("'Sigma' must be a numeric ", N, " x ", N, " matrix.", call. = FALSE)
+      nrow(Sigma) != N || ncol(Sigma) != N || any(!is.finite(Sigma)))
+    stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
   if (!is.numeric(nu) || length(nu) != 1L || nu <= 0)
     stop("'nu' must be a positive numeric scalar.", call. = FALSE)
   ## --- end validation ---
 
-  N <- length(u)
   s <- sqrt(diag(Sigma))
 
   x <- mu + s * qt(p = u, df = nu)

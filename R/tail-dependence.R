@@ -55,6 +55,7 @@
 #' f_tail_dependence(x, y, alpha = 0.05)
 #' f_tail_dependence(x, y, alpha = 0.05, side = "upper")
 #'
+#' @seealso \code{\link{f_efficient_frontier}}
 #' @importFrom stats cor quantile
 #' @export
 f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {

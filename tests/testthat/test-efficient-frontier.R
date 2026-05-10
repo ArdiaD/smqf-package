@@ -51,3 +51,11 @@ test_that("volatility is non-negative", {
   ef <- f_efficient_frontier(mu, Sigma, n_ptf = 6)
   expect_true(all(ef$volatility >= 0))
 })
+
+test_that("f_efficient_frontier validates inputs", {
+  d <- 3
+  mu <- rep(0.01, d)
+  Sigma <- diag(d)
+  expect_error(f_efficient_frontier(mu, Sigma, n_ptf = 1), "n_ptf")
+  expect_error(f_efficient_frontier(mu, diag(d) * Inf, n_ptf = 10), "finite")
+})

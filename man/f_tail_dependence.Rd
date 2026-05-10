@@ -68,3 +68,6 @@ Embrechts, P., McNeil, A. J., & Straumann, D. (2002). Correlation and
 dependence in risk management.
 \emph{Risk Management: Value at Risk and Beyond}. Cambridge University Press.
 }
+\seealso{
+\code{\link{f_efficient_frontier}}
+}

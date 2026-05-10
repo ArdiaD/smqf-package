@@ -1,4 +1,5 @@
 test_that("f_ptf_max_U returns valid weights summing to 1", {
+  skip_if_not_installed("PerformanceAnalytics")
   set.seed(1)
   N  <- 4
   mu <- c(0.05, 0.08, 0.10, 0.12)
@@ -36,6 +37,7 @@ test_that("input validation: wrong M4 shape raises error", {
 })
 
 test_that("f_ptf_max_U respects w_max constraint", {
+  skip_if_not_installed("PerformanceAnalytics")
   set.seed(2)
   N  <- 3
   mu <- c(0.06, 0.09, 0.12)

@@ -30,6 +30,15 @@
 #' @export
 f_display_copula <- function(my_copula, grid_1, grid_2) {
 
+  ## --- input validation ---
+  if (!is.function(my_copula))
+    stop("'my_copula' must be a function.", call. = FALSE)
+  if (!is.numeric(grid_1) || length(grid_1) == 0L)
+    stop("'grid_1' must be a non-empty numeric vector.", call. = FALSE)
+  if (!is.numeric(grid_2) || length(grid_2) == 0L)
+    stop("'grid_2' must be a non-empty numeric vector.", call. = FALSE)
+  ## --- end validation ---
+
   n1 <- length(grid_1)
   n2 <- length(grid_2)
 

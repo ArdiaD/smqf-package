@@ -35,8 +35,8 @@
 #' @details
 #' The equality constraint is enforced via \code{eval_g_eq} and box constraints
 #' via \code{lb}/\code{ub}. Gradients are supplied analytically using
-#' internal \pkg{PerformanceAnalytics} derivatives for moments, which helps SLSQP
-#' converge reliably.
+#' internal helper functions `.derportm2`, `.derportm3`, and `.derportm4` defined
+#' in `portfolio-moments.R`.
 #'
 #' @section Implementation note:
 #' Portfolio moment calculations (\code{portm2/3/4} and their gradients) are

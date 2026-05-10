@@ -39,8 +39,8 @@ f_gumbel_copula_2d_cdf <- function(u, theta) {
   if (!is.numeric(u) || length(u) != 2L || any(u <= 0) || any(u > 1))
     stop("'u' must be a numeric vector of length 2 with entries in (0, 1].",
          call. = FALSE)
-  if (!is.numeric(theta) || length(theta) != 1L || theta < 1)
-    stop("'theta' must be a numeric scalar >= 1.", call. = FALSE)
+  if (!is.numeric(theta) || length(theta) != 1L || !is.finite(theta) || theta < 1)
+    stop("'theta' must be a finite numeric scalar >= 1.", call. = FALSE)
   ## --- end validation ---
   u1  <- u[1]
   u2  <- u[2]
@@ -89,8 +89,8 @@ f_gumbel_copula_2d_pdf <- function(u, theta) {
   if (!is.numeric(u) || length(u) != 2L || any(u <= 0) || any(u > 1))
     stop("'u' must be a numeric vector of length 2 with entries in (0, 1].",
          call. = FALSE)
-  if (!is.numeric(theta) || length(theta) != 1L || theta < 1)
-    stop("'theta' must be a numeric scalar >= 1.", call. = FALSE)
+  if (!is.numeric(theta) || length(theta) != 1L || !is.finite(theta) || theta < 1)
+    stop("'theta' must be a finite numeric scalar >= 1.", call. = FALSE)
   ## --- end validation ---
   u1 <- u[1]
   u2 <- u[2]

@@ -56,26 +56,18 @@
 #' @importFrom pracma mldivide
 #' @export
 f_normal_copula_pdf <- function(u, mu, Sigma) {
-  # Compute the PDF of the copula of the normal distribution at the
-  # generic point u in the unit hypercube
-  # INPUTS
-  #  u     : [vector] (J x 1) grade
-  #  Mu    : [vector] (N x 1) mean
-  #  Sigma : [matrix] (N x N) covariance matrix
-  # OUTPUTS
-  #  F_U   : [vector] (J x 1) PDF values
 
   ## --- input validation ---
   if (!is.numeric(u) || length(u) == 0L || any(u <= 0) || any(u >= 1))
     stop("'u' must be a numeric vector with all entries in (0, 1).",
          call. = FALSE)
   N <- length(u)
-  if (!is.numeric(mu) || length(mu) != N)
-    stop("'mu' must be a numeric vector of the same length as 'u'.",
+  if (!is.numeric(mu) || length(mu) != N || any(!is.finite(mu)))
+    stop("'mu' must be a finite numeric vector of the same length as 'u'.",
          call. = FALSE)
   if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
-      nrow(Sigma) != N || ncol(Sigma) != N)
-    stop("'Sigma' must be a numeric ", N, " x ", N, " matrix.", call. = FALSE)
+      nrow(Sigma) != N || ncol(Sigma) != N || any(!is.finite(Sigma)))
+    stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
   ## --- end validation ---
 
   s <- sqrt(diag(Sigma))
