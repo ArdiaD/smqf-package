@@ -19,8 +19,7 @@ Invisibly returns the matrix of evaluated copula values
 }
 \description{
 Evaluates and displays a bivariate copula function (typically a PDF or CDF)
-on a 2D grid, producing either a static 3D surface via base R's
-[\code{persp()}] or an interactive 3D plot using the \pkg{rgl} package.
+on a 2D grid, producing a static 3D surface via base R's \code{persp()}.
 }
 \details{
 This function provides a simple way to visualize the surface of a bivariate

@@ -102,7 +102,7 @@ f_FitSqrtSvensson <- function(tau, y) {
 
   tau[tau < 1e-4] <- 1e-4
 
-  gamma    <- rep(NaN, 2)
+  gamma    <- numeric(2)
   gamma[1] <- 0.0609 * 12    # gamma_1 := 1 / lambda_1, where lambda_1 is 16.42  see Michiel de Pooter (2007)
   gamma[2] <- 1 / 9.73 * 12  # gamma_2 := 1 / lambda_2, where lambda_2 is 9.73  see Michiel de Pooter (2007)
 
@@ -164,7 +164,7 @@ f_PowerSvensson <- function(tau, beta) {
   ###  OUTPUTS
   ###   y     : [vector] (n x 1) squared spot rates corresponding to maturities tau
 
-  gamma    <- rep(NaN, 2)
+  gamma    <- numeric(2)
   gamma[1] <- 0.0609 * 12    # gamma_1 := 1 / lambda_1, where lambda_1 is 16.42  see Michiel de Pooter (2007)
   gamma[2] <- 1 / 9.73 * 12  # gamma_2 := 1 / lambda_2, where lambda_2 is 9.73  see Michiel de Pooter (2007)
 

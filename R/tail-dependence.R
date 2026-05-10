@@ -70,9 +70,12 @@ f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
 
   sumx  <- sum(idx_x & idx_y)
 
-  if (sumx > 0) {
+  if (sumx >= 2) {
     lambda <- sumx / sum(idx_x)
     excorr <- stats::cor(x[idx_x & idx_y], y[idx_x & idx_y])
+  } else if (sumx == 1) {
+    lambda <- sumx / sum(idx_x)
+    excorr <- NA  # cor() undefined for a single observation
   } else {
     lambda <- 0
     excorr <- NA

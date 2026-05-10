@@ -15,7 +15,8 @@
 #'   distribution (\eqn{\nu > 0}).
 #'
 #' @return A numeric scalar: the value of the Student-\eqn{t} copula density
-#'   \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}.
+#'   \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}. The value is returned as a
+#'   plain numeric scalar (not a \eqn{1 \times 1} matrix).
 #'
 #' @details
 #' The multivariate Student-\eqn{t} copula density is given by
@@ -68,7 +69,7 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
 
   x <- mu + s * qt(p = u, df = nu)
 
-  z2 <- (x - mu) %*% pracma::mldivide(Sigma, (x - mu))
+  z2 <- drop((x - mu) %*% pracma::mldivide(Sigma, (x - mu)))
   K  <- (nu * pi)^(-N / 2) * gamma((nu + N) / 2) / gamma(nu / 2) * ((det(Sigma))^(-0.5))
   Numerator <- K * (1 + z2 / nu)^(-(nu + N) / 2)
 

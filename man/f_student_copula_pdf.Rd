@@ -21,7 +21,8 @@ distribution (\eqn{\nu > 0}).}
 }
 \value{
 A numeric scalar: the value of the Student-\eqn{t} copula density
-  \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}.
+  \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}. The value is returned as a
+  plain numeric scalar (not a \eqn{1 \times 1} matrix).
 }
 \description{
 Computes the probability density function (PDF) of the multivariate

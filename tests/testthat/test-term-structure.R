@@ -38,3 +38,10 @@ test_that("f_FitSqrtSvensson: returns numeric beta of length 4", {
   expect_equal(length(beta), 4)
   expect_true(all(is.finite(beta)))
 })
+
+test_that("f_NelsonSiegel warns when gamma has length > 1", {
+  expect_warning(
+    f_NelsonSiegel(c(1, 5), gamma = c(0.5, 0.3), beta = c(0.05, -0.02, 0.01)),
+    "gamma\\[1\\]"
+  )
+})

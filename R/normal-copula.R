@@ -12,7 +12,8 @@
 #' @param Sigma Numeric positive-definite \eqn{N \times N} covariance matrix.
 #'
 #' @return A numeric scalar: the value of the Gaussian copula density
-#'   \eqn{c(u; \mu, \Sigma)} at the point \code{u}.
+#'   \eqn{c(u; \mu, \Sigma)} at the point \code{u}. The value is returned
+#'   as a plain numeric scalar (not a \eqn{1 \times 1} matrix).
 #'
 #' @details
 #' The Gaussian copula density is
@@ -70,7 +71,7 @@ f_normal_copula_pdf <- function(u, mu, Sigma) {
 
   Numerator <- (2 * pi)^(-N / 2) *
     (det(Sigma))^(-0.5) *
-    exp(-0.5 * (x - mu) %*% pracma::mldivide(A = Sigma, B = (x - mu)))
+    exp(-0.5 * drop((x - mu) %*% pracma::mldivide(A = Sigma, B = (x - mu))))
 
   fs <- dnorm(x, mu, s)
   Denominator <- prod(fs)

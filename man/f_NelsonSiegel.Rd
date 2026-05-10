@@ -9,8 +9,10 @@ f_NelsonSiegel(tau, gamma, beta)
 \arguments{
 \item{tau}{Numeric vector of maturities (in years).}
 
-\item{gamma}{Numeric vector with at least one element; only \code{gamma[1]}
-(the decay \eqn{\gamma_1}) is used.}
+\item{gamma}{Numeric scalar (or length-\eqn{\ge 1} vector) giving the decay
+parameter \eqn{\gamma_1}. Only \code{gamma[1]} is used; passing a longer
+vector (e.g., the two-element \eqn{\gamma} from a Svensson fit) will trigger
+a warning and \code{gamma[2:]} are silently ignored.}
 
 \item{beta}{Numeric vector of length 3, the NS loadings
 \eqn{(\beta_0,\beta_1,\beta_2)}.}

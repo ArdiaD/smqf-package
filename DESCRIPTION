@@ -4,16 +4,14 @@ Version: 1.1-0
 Authors@R: c(person("David", "Ardia", role = c("aut", "cre"), 
              email = "david.ardia.ch@gmail.com", 
              comment = c(ORCID = "0000-0003-2823-782X")))
-Description: Provides data and functions used in the book "Statistical Methods in Quantitative Finance" 
-             by David Ardia (2025) <doi:XXX>.
+Description: Provides data and functions used in the book "Statistical Methods in Quantitative Finance"
+             by David Ardia (2025).
 License: GPL-3
-RoxygenNote: 7.3.3
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
 URL: https://github.com/ArdiaD/smqf-package
 BugReports: https://github.com/ArdiaD/smqf-package/issues
-Suggests: 
-    rmarkdown,
+Suggests:
     zoo,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
@@ -21,5 +19,5 @@ Imports:
     graphics,
     stats,
     nloptr,
-    pracma,
-    PerformanceAnalytics
+    pracma
+Config/roxygen2/version: 8.0.0

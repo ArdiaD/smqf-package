@@ -36,11 +36,13 @@
 #' internal \pkg{PerformanceAnalytics} derivatives for moments, which helps SLSQP
 #' converge reliably.
 #'
-#' @section Important note on dependencies:
-#' This function uses \code{PerformanceAnalytics:::\*} \emph{internal} helpers
-#' (\code{portm2}, \code{portm3}, \code{portm4} and their derivatives). These
-#' are not exported, so CRAN packages should either vendor equivalents or rely
-#' on exported APIs. It also relies on \pkg{nloptr} SLSQP.
+#' @section Implementation note:
+#' Portfolio moment calculations (\code{portm2/3/4} and their gradients) are
+#' performed by internal helpers in \file{R/portfolio-moments.R}, vendored
+#' from the standard kronecker-product formulas (Jondeau et al., 2007).
+#' Inputs \code{M3} and \code{M4} must be in the co-moment matrix form
+#' as returned by \code{PerformanceAnalytics::M3.MM()} and \code{M4.MM()}
+#' (dimensions \eqn{d \times d^2} and \eqn{d \times d^3}, respectively).
 #'
 #' @references
 #' Jondeau, E., Poon, S.-H., & Rockinger, M. (2007). \emph{Financial Modeling Under
@@ -58,7 +60,6 @@
 #' res$w; res$EU
 #'
 #' @importFrom nloptr nloptr
-#' @import PerformanceAnalytics
 #' @export
 f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
 
@@ -74,15 +75,14 @@ f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
 
   f_obj <- function(w) {
     mom1 <- sum(w * M1)
-    mom2 <- PerformanceAnalytics:::portm2(w, M2)
-    mom3 <- PerformanceAnalytics:::portm3(w, M3)
-    mom4 <- PerformanceAnalytics:::portm4(w, M4)
+    mom2 <- .portm2(w, M2)
+    mom3 <- .portm3(w, M3)
+    mom4 <- .portm4(w, M4)
     obj <- -mom1 + gamma * mom2 / 2 - gamma * (gamma + 1) * mom3 / 6 + gamma * (gamma + 1) * (gamma + 2) * mom4 / 24
 
-    momsgrad1 <- M1
-    momsgrad2 <- PerformanceAnalytics:::derportm2(w, M2)
-    momsgrad3 <- PerformanceAnalytics:::derportm3(w, M3)
-    momsgrad4 <- PerformanceAnalytics:::derportm4(w, M4)
+    momsgrad2 <- .derportm2(w, M2)
+    momsgrad3 <- .derportm3(w, M3)
+    momsgrad4 <- .derportm4(w, M4)
     gr <- -M1 + gamma * momsgrad2 / 2 - gamma * (gamma + 1) * momsgrad3 / 6 + gamma * (gamma + 1) * (gamma + 2) * momsgrad4 / 24
 
     out <- list("objective" = obj,

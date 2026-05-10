@@ -68,6 +68,7 @@ f_ewma_vol <- function(rets, history, lambda, type) {
   #    For the Meucci convention, a larger lambda gives more weight to
   #    recent observations (see @param lambda in the roxygen docs).
 
+  if (!is.matrix(rets)) rets <- as.matrix(rets)
   size <- dim(rets)
   r <- size[1]
   c <- size[2]

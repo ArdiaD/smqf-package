@@ -17,7 +17,8 @@ multivariate normal distribution (usually zeros for a copula).}
 }
 \value{
 A numeric scalar: the value of the Gaussian copula density
-  \eqn{c(u; \mu, \Sigma)} at the point \code{u}.
+  \eqn{c(u; \mu, \Sigma)} at the point \code{u}. The value is returned
+  as a plain numeric scalar (not a \eqn{1 \times 1} matrix).
 }
 \description{
 Computes the probability density function (PDF) of the Gaussian (normal)

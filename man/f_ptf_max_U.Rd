@@ -51,16 +51,17 @@ via \code{lb}/\code{ub}. Gradients are supplied analytically using
 internal \pkg{PerformanceAnalytics} derivatives for moments, which helps SLSQP
 converge reliably.
 }
-\section{Important note on dependencies}{
+\section{Implementation note}{
 
-This function uses \code{PerformanceAnalytics:::\*} \emph{internal} helpers
-(\code{portm2}, \code{portm3}, \code{portm4} and their derivatives). These
-are not exported, so CRAN packages should either vendor equivalents or rely
-on exported APIs. It also relies on \pkg{nloptr} SLSQP.
+Portfolio moment calculations (\code{portm2/3/4} and their gradients) are
+performed by internal helpers in \file{R/portfolio-moments.R}, vendored
+from the standard kronecker-product formulas (Jondeau et al., 2007).
+Inputs \code{M3} and \code{M4} must be in the co-moment matrix form
+as returned by \code{PerformanceAnalytics::M3.MM()} and \code{M4.MM()}
+(dimensions \eqn{d \times d^2} and \eqn{d \times d^3}, respectively).
 }
 
 \examples{
-\dontrun{
 set.seed(1)
 d <- 3
 M1 <- c(0.06, 0.08, 0.07)
@@ -69,7 +70,6 @@ M3 <- array(0, dim = c(d,d,d))
 M4 <- array(0, dim = c(d,d,d,d))
 res <- f_ptf_max_U(gamma = 5, w_max = 0.8, M1, M2, M3, M4)
 res$w; res$EU
-}
 
 }
 \references{
