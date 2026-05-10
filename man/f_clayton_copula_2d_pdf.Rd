@@ -8,7 +8,7 @@ f_clayton_copula_2d_pdf(u, theta)
 }
 \arguments{
 \item{u}{Numeric vector of length 2, containing values in the interval
-\eqn{[0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.}
+\eqn{(0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.}
 
 \item{theta}{Numeric scalar giving the dependence parameter
 (\eqn{\theta > 0}). Values near zero approximate independence.}

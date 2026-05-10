@@ -10,7 +10,7 @@
 #' whose PDF equals 1 for all \eqn{(u_1, u_2) \in [0,1]^2}.
 #'
 #' @param u Numeric vector of length 2, containing values in the interval
-#'   \eqn{[0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.
+#'   \eqn{(0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.
 #' @param theta Numeric scalar giving the dependence parameter
 #'   (\eqn{\theta > 0}). Values near zero approximate independence.
 #'
