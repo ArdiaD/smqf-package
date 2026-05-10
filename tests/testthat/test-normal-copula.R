@@ -2,17 +2,25 @@ test_that("f_normal_copula_pdf returns 1 at independence (Sigma = I)", {
   mu    <- c(0, 0)
   Sigma <- diag(2)
   # Independence copula: density = 1 everywhere in the interior
-  expect_equal(as.numeric(f_normal_copula_pdf(c(0.5, 0.5), mu, Sigma)), 1, tolerance = 1e-10)
-  expect_equal(as.numeric(f_normal_copula_pdf(c(0.3, 0.7), mu, Sigma)), 1, tolerance = 1e-10)
+  expect_equal(
+    as.numeric(f_normal_copula_pdf(c(0.5, 0.5), mu, Sigma)), 1,
+    tolerance = 1e-10
+  )
+  expect_equal(
+    as.numeric(f_normal_copula_pdf(c(0.3, 0.7), mu, Sigma)), 1,
+    tolerance = 1e-10
+  )
 })
 
 test_that("f_normal_copula_pdf is symmetric in u", {
   mu    <- c(0, 0)
   Sigma <- matrix(c(1, 0.6, 0.6, 1), 2, 2)
   u <- c(0.3, 0.7)
-  expect_equal(as.numeric(f_normal_copula_pdf(u, mu, Sigma)),
-               as.numeric(f_normal_copula_pdf(rev(u), mu, Sigma)),
-               tolerance = 1e-10)
+  expect_equal(
+    as.numeric(f_normal_copula_pdf(u, mu, Sigma)),
+    as.numeric(f_normal_copula_pdf(rev(u), mu, Sigma)),
+    tolerance = 1e-10
+  )
 })
 
 test_that("f_normal_copula_pdf is finite and positive", {
@@ -23,9 +31,27 @@ test_that("f_normal_copula_pdf is finite and positive", {
   expect_true(val > 0)
 })
 
-test_that("f_normal_copula_pdf: positive correlation raises density at concordant points", {
-  mu     <- c(0, 0)
-  S_pos  <- matrix(c(1, 0.8, 0.8, 1), 2, 2)
+test_that("input validation: u outside (0,1) raises error", {
+  mu <- c(0, 0); S <- diag(2)
+  expect_error(f_normal_copula_pdf(c(0, 0.5), mu, S), "'u'")
+  expect_error(f_normal_copula_pdf(c(1, 0.5), mu, S), "'u'")
+})
+
+test_that("input validation: mu length mismatch raises error", {
+  expect_error(
+    f_normal_copula_pdf(c(0.5, 0.5), c(0, 0, 0), diag(2)), "'mu'"
+  )
+})
+
+test_that("input validation: non-square Sigma raises error", {
+  expect_error(
+    f_normal_copula_pdf(c(0.5, 0.5), c(0, 0), matrix(1:6, 2, 3)), "'Sigma'"
+  )
+})
+
+test_that("f_normal_copula_pdf: positive corr raises density at concordant pts", {
+  mu      <- c(0, 0)
+  S_pos   <- matrix(c(1, 0.8, 0.8, 1), 2, 2)
   S_indep <- diag(2)
   # At (0.8, 0.8) concordant with positive correlation, density > 1
   val_pos <- as.numeric(f_normal_copula_pdf(c(0.8, 0.8), mu, S_pos))

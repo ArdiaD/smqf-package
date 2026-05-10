@@ -59,7 +59,8 @@ f_student_copula_pdf(c(0.6, 0.8), mu, Sigma, nu = 100)
 \references{
 Demarta, S., & McNeil, A. J. (2005). The t Copula and Related Copulas.
 *International Statistical Review*, 73(1), 111–129.
-Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
+Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman &
+Hall.
 Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
 }
 \seealso{

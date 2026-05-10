@@ -19,7 +19,8 @@ An \code{xts} object with 276 monthly observations
 }
 }
 \source{
-Compiled from public factor sources commonly used in the Fung–Hsieh literature
+Compiled from public factor sources commonly used in the Fung–Hsieh
+literature
 (e.g., Hsieh’s data library, FRED/H.15, and Fama–French style factors).
 If you distribute the data, include a \code{data-raw/} script that reproduces
 this object from original sources.
@@ -51,7 +52,8 @@ if (requireNamespace("zoo", quietly = TRUE)) {
 
 }
 \references{
-Fung, W., & Hsieh, D. A. (2004). Hedge Fund Benchmarks: A Risk-Based Approach.
+Fung, W., & Hsieh, D. A. (2004). Hedge Fund Benchmarks: A Risk-Based
+Approach.
 \emph{Financial Analysts Journal}, 60(5), 65–80.
 Fung, W., & Hsieh, D. A. (2001). The Risk in Hedge Fund Strategies:
 Theory and Evidence from Trend Followers. \emph{Review of Financial Studies}, 14(2), 313–341.

@@ -163,4 +163,3 @@ f_efficient_frontier <- function(mu, Sigma, n_ptf) {
     targets = targets
   )
 }
-

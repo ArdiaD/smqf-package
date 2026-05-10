@@ -35,9 +35,11 @@
 #' covariance.
 #'
 #' @references
-#' Joe, H. (1997). *Multivariate Models and Dependence Concepts.* Chapman & Hall.
+#' Joe, H. (1997). *Multivariate Models and Dependence Concepts.* Chapman &
+#' Hall.
 #' Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
-#' McNeil, A. J., Frey, R., & Embrechts, P. (2015). *Quantitative Risk Management.* Princeton University Press.
+#' McNeil, A. J., Frey, R., & Embrechts, P. (2015). *Quantitative Risk
+#' Management.* Princeton University Press.
 #'
 #' @examples
 #' # Example: 2D Gaussian copula
@@ -51,7 +53,7 @@
 #' @seealso \code{\link{f_student_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
 #'   \code{\link{f_gumbel_copula_2d_pdf}}
 #' @importFrom stats qnorm dnorm
-#' @importFrom pracma mldivide mrdivide
+#' @importFrom pracma mldivide
 #' @export
 f_normal_copula_pdf <- function(u, mu, Sigma) {
   # Compute the PDF of the copula of the normal distribution at the
@@ -63,8 +65,19 @@ f_normal_copula_pdf <- function(u, mu, Sigma) {
   # OUTPUTS
   #  F_U   : [vector] (J x 1) PDF values
 
+  ## --- input validation ---
+  if (!is.numeric(u) || length(u) == 0L || any(u <= 0) || any(u >= 1))
+    stop("'u' must be a numeric vector with all entries in (0, 1).",
+         call. = FALSE)
   N <- length(u)
-  m <- length(mu)     # number of assets
+  if (!is.numeric(mu) || length(mu) != N)
+    stop("'mu' must be a numeric vector of the same length as 'u'.",
+         call. = FALSE)
+  if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
+      nrow(Sigma) != N || ncol(Sigma) != N)
+    stop("'Sigma' must be a numeric ", N, " x ", N, " matrix.", call. = FALSE)
+  ## --- end validation ---
+
   s <- sqrt(diag(Sigma))
 
   x <- qnorm(p = u, mean = mu, sd = s)
@@ -76,7 +89,7 @@ f_normal_copula_pdf <- function(u, mu, Sigma) {
   fs <- dnorm(x, mu, s)
   Denominator <- prod(fs)
 
-  F_U <- pracma::mrdivide(Numerator, Denominator)
+  F_U <- Numerator / Denominator
 
   F_U
 }

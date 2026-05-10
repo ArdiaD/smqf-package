@@ -58,6 +58,3 @@ f_display_copula <- function(my_copula, grid_1, grid_2) {
 
   invisible(f_U)
 }
-
-
-

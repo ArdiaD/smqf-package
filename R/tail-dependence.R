@@ -43,7 +43,8 @@
 #'
 #' @references
 #' Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
-#' Embrechts, P., McNeil, A. J., & Straumann, D. (2002). Correlation and dependence in risk management.
+#' Embrechts, P., McNeil, A. J., & Straumann, D. (2002). Correlation and
+#' dependence in risk management.
 #' \emph{Risk Management: Value at Risk and Beyond}. Cambridge University Press.
 #'
 #' @examples
@@ -57,6 +58,18 @@
 #' @importFrom stats cor quantile
 #' @export
 f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
+
+  ## --- input validation ---
+  if (!is.numeric(x) || length(x) == 0L)
+    stop("'x' must be a non-empty numeric vector.", call. = FALSE)
+  if (!is.numeric(y) || length(y) == 0L)
+    stop("'y' must be a non-empty numeric vector.", call. = FALSE)
+  if (length(x) != length(y))
+    stop("'x' and 'y' must have the same length.", call. = FALSE)
+  if (!is.numeric(alpha) || length(alpha) != 1L ||
+      alpha <= 0 || alpha >= 1)
+    stop("'alpha' must be a numeric scalar in (0, 1).", call. = FALSE)
+  ## --- end validation ---
 
   side <- match.arg(side)
 

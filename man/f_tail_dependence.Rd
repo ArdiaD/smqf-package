@@ -64,6 +64,7 @@ f_tail_dependence(x, y, alpha = 0.05, side = "upper")
 }
 \references{
 Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
-Embrechts, P., McNeil, A. J., & Straumann, D. (2002). Correlation and dependence in risk management.
+Embrechts, P., McNeil, A. J., & Straumann, D. (2002). Correlation and
+dependence in risk management.
 \emph{Risk Management: Value at Risk and Beyond}. Cambridge University Press.
 }

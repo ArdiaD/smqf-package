@@ -56,9 +56,11 @@ f_normal_copula_pdf(c(0.5, 0.8), mu, diag(2))
 
 }
 \references{
-Joe, H. (1997). *Multivariate Models and Dependence Concepts.* Chapman & Hall.
+Joe, H. (1997). *Multivariate Models and Dependence Concepts.* Chapman &
+Hall.
 Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
-McNeil, A. J., Frey, R., & Embrechts, P. (2015). *Quantitative Risk Management.* Princeton University Press.
+McNeil, A. J., Frey, R., & Embrechts, P. (2015). *Quantitative Risk
+Management.* Princeton University Press.
 }
 \seealso{
 \code{\link{f_student_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},

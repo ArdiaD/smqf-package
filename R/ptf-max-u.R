@@ -21,8 +21,10 @@
 #'   bound: \eqn{0 \le w_i \le w_max}.
 #' @param M1 Numeric vector of expected returns (length \eqn{d}).
 #' @param M2 Numeric \eqn{d \times d} covariance matrix.
-#' @param M3 Numeric third central moment tensor (array of dim \eqn{d \times d \times d}).
-#' @param M4 Numeric fourth central moment tensor (array of dim \eqn{d \times d \times d \times d}).
+#' @param M3 Numeric \eqn{d \times d^2} co-moment matrix, as returned by
+#'   \code{PerformanceAnalytics::M3.MM()}.
+#' @param M4 Numeric \eqn{d \times d^3} co-moment matrix, as returned by
+#'   \code{PerformanceAnalytics::M4.MM()}.
 #'
 #' @return A list with:
 #' \describe{
@@ -40,28 +42,50 @@
 #' Portfolio moment calculations (\code{portm2/3/4} and their gradients) are
 #' performed by internal helpers in \file{R/portfolio-moments.R}, vendored
 #' from the standard kronecker-product formulas (Jondeau et al., 2007).
-#' Inputs \code{M3} and \code{M4} must be in the co-moment matrix form
-#' as returned by \code{PerformanceAnalytics::M3.MM()} and \code{M4.MM()}
-#' (dimensions \eqn{d \times d^2} and \eqn{d \times d^3}, respectively).
+#' \code{M3} and \code{M4} must be co-moment matrices (\eqn{d \times d^2}
+#' and \eqn{d \times d^3}), not higher-dimensional arrays.
 #'
 #' @references
-#' Jondeau, E., Poon, S.-H., & Rockinger, M. (2007). \emph{Financial Modeling Under
-#' Non-Gaussian Distributions}.
-#' Harvey, C. R., Liechty, J. C., Liechty, M. W., & Müller, P. (2010). Portfolio selection with higher moments.
+#' Jondeau, E., Poon, S.-H., & Rockinger, M. (2007). \emph{Financial Modeling
+#' Under Non-Gaussian Distributions}.
+#' Harvey, C. R., Liechty, J. C., Liechty, M. W., & Müller, P. (2010). Portfolio
+#' selection with higher moments.
 #'
 #' @examples
 #' set.seed(1)
 #' d <- 3
 #' M1 <- c(0.06, 0.08, 0.07)
 #' A  <- matrix(rnorm(d*d), d); M2 <- crossprod(A)/d
-#' M3 <- array(0, dim = c(d,d,d))
-#' M4 <- array(0, dim = c(d,d,d,d))
+#' M3 <- matrix(0, d, d^2)
+#' M4 <- matrix(0, d, d^3)
 #' res <- f_ptf_max_U(gamma = 5, w_max = 0.8, M1, M2, M3, M4)
 #' res$w; res$EU
 #'
 #' @importFrom nloptr nloptr
 #' @export
 f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
+
+  ## --- input validation ---
+  if (!is.numeric(gamma) || length(gamma) != 1L || gamma < 0)
+    stop("'gamma' must be a non-negative numeric scalar.", call. = FALSE)
+  if (!is.numeric(w_max) || length(w_max) != 1L ||
+      w_max <= 0 || w_max > 1)
+    stop("'w_max' must be a numeric scalar in (0, 1].", call. = FALSE)
+  if (!is.numeric(M1) || length(M1) == 0L)
+    stop("'M1' must be a non-empty numeric vector.", call. = FALSE)
+  d <- length(M1)
+  if (!is.numeric(M2) || !is.matrix(M2) ||
+      nrow(M2) != d || ncol(M2) != d)
+    stop("'M2' must be a numeric ", d, " x ", d, " matrix.", call. = FALSE)
+  if (!is.numeric(M3) || !is.matrix(M3) ||
+      nrow(M3) != d || ncol(M3) != d^2)
+    stop("'M3' must be a numeric ", d, " x ", d^2,
+         " co-moment matrix.", call. = FALSE)
+  if (!is.numeric(M4) || !is.matrix(M4) ||
+      nrow(M4) != d || ncol(M4) != d^3)
+    stop("'M4' must be a numeric ", d, " x ", d^3,
+         " co-moment matrix.", call. = FALSE)
+  ## --- end validation ---
 
   d <- length(M1)
 

@@ -35,6 +35,13 @@
 #'   \code{\link{f_normal_copula_pdf}}, \code{\link{f_student_copula_pdf}}
 #' @export
 f_gumbel_copula_2d_cdf <- function(u, theta) {
+  ## --- input validation ---
+  if (!is.numeric(u) || length(u) != 2L || any(u <= 0) || any(u > 1))
+    stop("'u' must be a numeric vector of length 2 with entries in (0, 1].",
+         call. = FALSE)
+  if (!is.numeric(theta) || length(theta) != 1L || theta < 1)
+    stop("'theta' must be a numeric scalar >= 1.", call. = FALSE)
+  ## --- end validation ---
   u1  <- u[1]
   u2  <- u[2]
   cdf <- exp(-((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1)))
@@ -78,6 +85,13 @@ f_gumbel_copula_2d_cdf <- function(u, theta) {
 #'   \code{\link{f_normal_copula_pdf}}, \code{\link{f_student_copula_pdf}}
 #' @export
 f_gumbel_copula_2d_pdf <- function(u, theta) {
+  ## --- input validation ---
+  if (!is.numeric(u) || length(u) != 2L || any(u <= 0) || any(u > 1))
+    stop("'u' must be a numeric vector of length 2 with entries in (0, 1].",
+         call. = FALSE)
+  if (!is.numeric(theta) || length(theta) != 1L || theta < 1)
+    stop("'theta' must be a numeric scalar >= 1.", call. = FALSE)
+  ## --- end validation ---
   u1 <- u[1]
   u2 <- u[2]
 

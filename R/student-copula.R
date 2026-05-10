@@ -37,7 +37,8 @@
 #' @references
 #' Demarta, S., & McNeil, A. J. (2005). The t Copula and Related Copulas.
 #' *International Statistical Review*, 73(1), 111–129.
-#' Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman & Hall.
+#' Joe, H. (1997). *Multivariate Models and Dependence Concepts*. Chapman &
+#' Hall.
 #' Nelsen, R. B. (2006). *An Introduction to Copulas* (2nd ed.). Springer.
 #'
 #' @examples
@@ -55,7 +56,8 @@
 #' @importFrom pracma mldivide
 #' @export
 f_student_copula_pdf <- function (u, mu, Sigma, nu) {
-  # Pdf of the copula of the Student t distribution at the generic point u in the unit hypercube
+  # Pdf of the copula of the Student t distribution at the generic point
+  # u in the unit hypercube
   # INPUTS
   #   u     : [vector] (J x 1) grade
   #   Mu    : [vector] (N x 1) mean
@@ -63,6 +65,21 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
   #   nu    : [scalar] degrees of freedom
   # OUTPUTS
   #   F_U   : [vector] (J x 1) PDF
+
+  ## --- input validation ---
+  if (!is.numeric(u) || length(u) == 0L || any(u <= 0) || any(u >= 1))
+    stop("'u' must be a numeric vector with all entries in (0, 1).",
+         call. = FALSE)
+  N <- length(u)
+  if (!is.numeric(mu) || length(mu) != N)
+    stop("'mu' must be a numeric vector of the same length as 'u'.",
+         call. = FALSE)
+  if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
+      nrow(Sigma) != N || ncol(Sigma) != N)
+    stop("'Sigma' must be a numeric ", N, " x ", N, " matrix.", call. = FALSE)
+  if (!is.numeric(nu) || length(nu) != 1L || nu <= 0)
+    stop("'nu' must be a positive numeric scalar.", call. = FALSE)
+  ## --- end validation ---
 
   N <- length(u)
   s <- sqrt(diag(Sigma))

@@ -23,7 +23,8 @@
 #' Dates run from \code{2006-05-12} to \code{2008-10-31} (about 622 business
 #' days in this snapshot). Yields are curve levels for each maturity on each
 #' date and can be used directly for fitting/parsing term-structure models
-#' (e.g., Nelson–Siegel or Svensson), computing spreads (term, slope, butterfly),
+#' (e.g., Nelson–Siegel or Svensson), computing spreads (term, slope,
+#' butterfly),
 #' or building zero curves.
 #'
 #' @examples
