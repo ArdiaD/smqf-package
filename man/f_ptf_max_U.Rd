@@ -17,10 +17,10 @@ bound: \eqn{0 \le w_i \le w_max}.}
 \item{M2}{Numeric \eqn{d \times d} covariance matrix.}
 
 \item{M3}{Numeric \eqn{d \times d^2} co-moment matrix, as returned by
-\code{PerformanceAnalytics::M3.MM()}.}
+\code{M3.MM()} from the \pkg{PerformanceAnalytics} package.}
 
 \item{M4}{Numeric \eqn{d \times d^3} co-moment matrix, as returned by
-\code{PerformanceAnalytics::M4.MM()}.}
+\code{M4.MM()} from the \pkg{PerformanceAnalytics} package.}
 }
 \value{
 A list with:

@@ -22,9 +22,9 @@
 #' @param M1 Numeric vector of expected returns (length \eqn{d}).
 #' @param M2 Numeric \eqn{d \times d} covariance matrix.
 #' @param M3 Numeric \eqn{d \times d^2} co-moment matrix, as returned by
-#'   \code{PerformanceAnalytics::M3.MM()}.
+#'   \code{M3.MM()} from the \pkg{PerformanceAnalytics} package.
 #' @param M4 Numeric \eqn{d \times d^3} co-moment matrix, as returned by
-#'   \code{PerformanceAnalytics::M4.MM()}.
+#'   \code{M4.MM()} from the \pkg{PerformanceAnalytics} package.
 #'
 #' @return A list with:
 #' \describe{
