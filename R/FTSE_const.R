@@ -1,0 +1,38 @@
+#' FTSE 100 Constituents (Daily, xts)
+#'
+#' Daily adjusted close prices for 98 constituents of the FTSE 100 stock
+#' index as of 2016-01-03.
+#'
+#' @format An \code{xts} object with 7198 daily observations and 98
+#' columns, one per constituent (e.g., \code{HSBA.L}, \code{BP.L},
+#' \code{VOD.L}). Missing values appear before the first date at which
+#' a given constituent was available. The time index spans from
+#' 1988-05-03 to 2015-12-31.
+#'
+#' @details
+#' Originally distributed as \code{FTSE_const} in the \strong{qrmdata}
+#' package (Hofert, Hornik, & McNeil), ported into \pkg{smqf} so that
+#' the book's examples remain reproducible without an extra dependency. The
+#' data is redistributed here under the same GPL (\eqn{\ge 2}) license as
+#' \strong{qrmdata}.
+#' Only 98 of the 100 constituents were available at the time of the
+#' download.
+#'
+#' @source
+#' Yahoo Finance, downloaded on 2016-01-03 via \code{qrmtools::get_data()}.
+#'
+#' @references
+#' Hofert, M., Hornik, K., & McNeil, A. J. \emph{qrmdata: Data Sets for
+#' Quantitative Risk Management Practice},
+#' \url{https://CRAN.R-project.org/package=qrmdata}.
+#'
+#' @examples
+#' data("FTSE_const")
+#' class(FTSE_const)        # "xts" "zoo"
+#' dim(FTSE_const)
+#' head(colnames(FTSE_const))
+#'
+#' @usage data("FTSE_const")
+#' @docType data
+#' @keywords datasets time-series finance
+"FTSE_const"

@@ -11,3 +11,6 @@
   - Plotting: `f_plot_pairs`.
   - Term structure: `f_NelsonSiegel`, `f_FitSqrtSvensson`, `f_PowerSvensson`.
 * Datasets: `FungHsieh`, `GoyalWelch`, `TermStructure`.
+* Datasets ported from **qrmdata** (so the book no longer depends on that
+  package): `SP500`, `DJ`, `DJ_const`, `FTSE`, `FTSE_const`, `EURSTOXX`,
+  `EURSTX_const`, `DAX`, `CAC`, `NIKKEI`, `SMI`, `HSI`, `GOLD`, `VIX`.
