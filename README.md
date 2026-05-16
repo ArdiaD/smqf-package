@@ -1,7 +1,6 @@
 # smqf: Statistical Methods in Quantitative Finance
 
-`smqf` is an R package providing datasets and functions used in the book "Statistical Methods in Quantitative Finance" 
-[Ardia (2025)](https://doi.org/XXX).
+`smqf` is an R package providing datasets and functions used in the book "Statistical Methods in Quantitative Finance" by Ardia (2025), CRC Press.
 
 Please cite the package in publications!\
 By using `smqf` you agree to the following rules:

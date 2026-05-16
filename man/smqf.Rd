@@ -31,8 +31,8 @@ Quantitative Risk Management Practice*.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/ArdiaD/smqf-package}
-  \item Report bugs at \url{https://github.com/ArdiaD/smqf-package/issues}
+  \item \url{https://github.com/ardiad/smqf}
+  \item Report bugs at \url{https://github.com/ardiad/smqf/issues}
 }
 
 }

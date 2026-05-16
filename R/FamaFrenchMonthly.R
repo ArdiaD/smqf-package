@@ -38,6 +38,12 @@
 #' ff <- FamaFrenchMonthly[, c("mkt_rf", "smb", "hml")] / 100
 #' rf <- FamaFrenchMonthly[, "rf"] / 100
 #'
+#' @seealso \code{\link{FamaFrenchWeekly}} for the higher-frequency
+#'   (weekly, 1926-2019) companion dataset built from the same Kenneth French
+#'   source. The two datasets are pedagogically complementary: the monthly
+#'   version is convenient for low-frequency factor-model illustrations, while
+#'   the weekly version offers a much longer sample for time-series exercises.
+#'
 #' @usage data("FamaFrenchMonthly")
 #' @docType data
 #' @keywords datasets time-series finance

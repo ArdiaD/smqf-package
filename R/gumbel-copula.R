@@ -44,7 +44,7 @@ f_gumbel_copula_2d_cdf <- function(u, theta) {
   ## --- end validation ---
   u1  <- u[1]
   u2  <- u[2]
-  cdf <- exp(-((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1)))
+  cdf <- exp(-((-log(u1))^theta + (-log(u2))^theta)^(1/theta))
   cdf
 }
 
@@ -97,7 +97,7 @@ f_gumbel_copula_2d_pdf <- function(u, theta) {
 
   pdf <- f_gumbel_copula_2d_cdf(u, theta) * ((u1 * u2)^(-1)) *
     (((-log(u1)) * (-log(u2)))^(theta - 1))
-  pdf <- pdf * (((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1) - 2))
-  pdf <- pdf * ((((-log(u1))^theta + (-log(u2))^theta)^(theta^(-1))) + theta - 1)
+  pdf <- pdf * (((-log(u1))^theta + (-log(u2))^theta)^(1/theta - 2))
+  pdf <- pdf * ((((-log(u1))^theta + (-log(u2))^theta)^(1/theta)) + theta - 1)
   pdf
 }

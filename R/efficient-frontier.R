@@ -142,8 +142,8 @@ f_efficient_frontier <- function(mu, Sigma, n_ptf) {
       } else {
         # If infeasible or failed, fall back to previous feasible solution (monotone frontier)
         w_i <- w_[, i - 1, drop = FALSE]
-        warning(sprintf("QP did not converge at target %g; carrying forward
-                        previous weights.", targets[i]), call. = FALSE)
+        warning(sprintf("QP did not converge at target %g; carrying forward previous weights.",
+                        targets[i]), call. = FALSE)
       }
 
       w_[, i] <- w_i

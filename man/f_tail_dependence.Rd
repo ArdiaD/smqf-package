@@ -51,7 +51,11 @@ each margin and computes:
     for which both lie in their respective tails (\code{excorr}).
 }
 If no joint tail events are found, \code{lambda = 0} and
-\code{excorr = NA}.
+\code{excorr = NA}. If fewer than two joint-tail observations are available,
+\code{excorr} is also \code{NA} (the sample correlation is undefined).
+When the joint-tail subset is degenerate (e.g., \code{x} and \code{y} are
+identical so that the subset has zero variance), \code{\link[stats]{cor}}
+returns \code{NA} with a warning.
 }
 \examples{
 set.seed(1)

@@ -4,7 +4,7 @@
 \alias{f_display_copula}
 \title{Display a Bivariate Copula Surface}
 \usage{
-f_display_copula(my_copula, grid_1, grid_2)
+f_display_copula(my_copula, grid_1, grid_2, plot = TRUE)
 }
 \arguments{
 \item{my_copula}{A function that takes a numeric vector \code{c(u1, u2)} as input
@@ -12,6 +12,11 @@ and returns a scalar value (e.g., a copula PDF or CDF).}
 
 \item{grid_1, grid_2}{Numeric vectors defining the evaluation grid for
 \eqn{u_1} and \eqn{u_2} in the interval \eqn{[0,1]}.}
+
+\item{plot}{Logical; if \code{TRUE} (the default), a 3D surface is drawn via
+\code{graphics::persp()}. If \code{FALSE}, no graphics device is opened and
+only the evaluated matrix is returned (useful for testing or
+non-interactive use).}
 }
 \value{
 Invisibly returns the matrix of evaluated copula values

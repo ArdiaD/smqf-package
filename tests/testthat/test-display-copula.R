@@ -10,9 +10,7 @@ test_that("f_display_copula validates inputs", {
 test_that("f_display_copula returns a finite matrix", {
   my_grid <- seq(0.1, 0.9, by = 0.1)
   my_copula <- function(u) prod(u)  # independence copula
-  pdf(NULL)
-  result <- f_display_copula(my_copula, my_grid, my_grid)
-  dev.off()
+  result <- f_display_copula(my_copula, my_grid, my_grid, plot = FALSE)
   expect_true(is.matrix(result))
   expect_equal(nrow(result), length(my_grid))
   expect_equal(ncol(result), length(my_grid))

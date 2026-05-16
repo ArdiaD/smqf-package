@@ -47,6 +47,14 @@ rf <- FamaFrenchWeekly[, "rf"] / 100
 Fama, E. F., & French, K. R. (1993). Common Risk Factors in the Returns on
 Stocks and Bonds. \emph{Journal of Financial Economics}, 33(1), 3–56.
 }
+\seealso{
+\code{\link{FamaFrenchMonthly}} for the lower-frequency
+  (monthly, 1969-1998) companion dataset built from the same Kenneth French
+  source. The two datasets are pedagogically complementary: the weekly
+  version offers a much longer sample for time-series exercises, while the
+  monthly version is convenient for low-frequency factor-model
+  illustrations.
+}
 \keyword{datasets}
 \keyword{finance}
 \keyword{time-series}

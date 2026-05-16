@@ -39,7 +39,11 @@
 #'     for which both lie in their respective tails (\code{excorr}).
 #' }
 #' If no joint tail events are found, \code{lambda = 0} and
-#' \code{excorr = NA}.
+#' \code{excorr = NA}. If fewer than two joint-tail observations are available,
+#' \code{excorr} is also \code{NA} (the sample correlation is undefined).
+#' When the joint-tail subset is degenerate (e.g., \code{x} and \code{y} are
+#' identical so that the subset has zero variance), \code{\link[stats]{cor}}
+#' returns \code{NA} with a warning.
 #'
 #' @references
 #' Joe, H. (1997). \emph{Multivariate Models and Dependence Concepts}. Chapman & Hall.
@@ -83,15 +87,13 @@ f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
   }
 
   sumx  <- sum(idx_x & idx_y)
+  nx    <- sum(idx_x)
 
+  lambda <- if (nx > 0) sumx / nx else 0
   if (sumx >= 2) {
-    lambda <- sumx / sum(idx_x)
     excorr <- stats::cor(x[idx_x & idx_y], y[idx_x & idx_y])
-  } else if (sumx == 1) {
-    lambda <- sumx / sum(idx_x)
-    excorr <- NA  # cor() undefined for a single observation
   } else {
-    lambda <- 0
+    # cor() is undefined for fewer than two joint-tail observations.
     excorr <- NA
   }
 

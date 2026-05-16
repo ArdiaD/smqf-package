@@ -65,6 +65,13 @@ McCracken, M. W., & Ng, S. (2016). FRED-MD: A Monthly Database for
 Macroeconomic Research. \emph{Journal of Business & Economic Statistics},
 34(4), 574–589.
 }
+\seealso{
+The book chapter on \emph{Dimension Reduction} (Chapter 4 of
+  \emph{Statistical Methods in Quantitative Finance}) introduces Lasso and
+  Ridge regression on the lower-dimensional \code{\link{GoyalWelch}} dataset;
+  \code{Fred} provides a complementary high-dimensional (\eqn{p \gg n}) test
+  bed for the same regularised-regression workflow.
+}
 \keyword{datasets}
 \keyword{finance}
 \keyword{macro-economics}

@@ -1,26 +1,34 @@
 Package: smqf
 Title: Statistical Methods in Quantitative Finance
 Version: 1.1-0
-Authors@R: c(person("David", "Ardia", role = c("aut", "cre"), 
-             email = "david.ardia.ch@gmail.com", 
-             comment = c(ORCID = "0000-0003-2823-782X")))
+Authors@R: c(
+    person("David", "Ardia", role = c("aut", "cre"),
+           email = "david.ardia.ch@gmail.com",
+           comment = c(ORCID = "0000-0003-2823-782X")),
+    person("Marius",      "Hofert", role = c("ctb", "cph"),
+           comment = "Original author of qrmdata, from which 14 market datasets were ported under GPL-2 | GPL-3"),
+    person("Kurt",        "Hornik", role = c("ctb", "cph"),
+           comment = "Original author of qrmdata, from which 14 market datasets were ported under GPL-2 | GPL-3"),
+    person("Alexander J.","McNeil", role = c("ctb", "cph"),
+           comment = "Original author of qrmdata, from which 14 market datasets were ported under GPL-2 | GPL-3"))
 Description: Provides data and functions used in the book "Statistical Methods in Quantitative Finance"
              by David Ardia (2025).
 License: GPL-3
 LazyData: true
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
-URL: https://github.com/ArdiaD/smqf-package
-BugReports: https://github.com/ArdiaD/smqf-package/issues
+URL: https://github.com/ardiad/smqf
+BugReports: https://github.com/ardiad/smqf/issues
 Suggests:
     zoo,
-    xts,
     testthat (>= 3.0.0),
-    PerformanceAnalytics
+    PerformanceAnalytics,
+    glmnet
 Config/testthat/edition: 3
 Imports:
     graphics,
     stats,
     nloptr,
-    pracma
+    pracma,
+    xts
 Config/roxygen2/version: 8.0.0

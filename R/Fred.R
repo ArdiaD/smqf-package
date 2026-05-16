@@ -55,6 +55,12 @@
 #'   coef(fit, s = "lambda.min")[coef(fit, s = "lambda.min")[,1] != 0, , drop = FALSE]
 #' }
 #'
+#' @seealso The book chapter on \emph{Dimension Reduction} (Chapter 4 of
+#'   \emph{Statistical Methods in Quantitative Finance}) introduces Lasso and
+#'   Ridge regression on the lower-dimensional \code{\link{GoyalWelch}} dataset;
+#'   \code{Fred} provides a complementary high-dimensional (\eqn{p \gg n}) test
+#'   bed for the same regularised-regression workflow.
+#'
 #' @usage data("Fred")
 #' @docType data
 #' @keywords datasets macro-economics finance regularisation

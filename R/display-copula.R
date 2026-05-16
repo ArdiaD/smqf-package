@@ -7,6 +7,10 @@
 #'   and returns a scalar value (e.g., a copula PDF or CDF).
 #' @param grid_1,grid_2 Numeric vectors defining the evaluation grid for
 #'   \eqn{u_1} and \eqn{u_2} in the interval \eqn{[0,1]}.
+#' @param plot Logical; if \code{TRUE} (the default), a 3D surface is drawn via
+#'   \code{graphics::persp()}. If \code{FALSE}, no graphics device is opened and
+#'   only the evaluated matrix is returned (useful for testing or
+#'   non-interactive use).
 #'
 #' @return Invisibly returns the matrix of evaluated copula values
 #'   \code{f_U}, with rows corresponding to \code{grid_1} and columns to \code{grid_2}.
@@ -28,7 +32,7 @@
 #'
 #' @importFrom graphics persp
 #' @export
-f_display_copula <- function(my_copula, grid_1, grid_2) {
+f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE) {
 
   ## --- input validation ---
   if (!is.function(my_copula))
@@ -37,6 +41,8 @@ f_display_copula <- function(my_copula, grid_1, grid_2) {
     stop("'grid_1' must be a non-empty numeric vector.", call. = FALSE)
   if (!is.numeric(grid_2) || length(grid_2) == 0L)
     stop("'grid_2' must be a non-empty numeric vector.", call. = FALSE)
+  if (!is.logical(plot) || length(plot) != 1L || is.na(plot))
+    stop("'plot' must be a single logical value (TRUE or FALSE).", call. = FALSE)
   ## --- end validation ---
 
   n1 <- length(grid_1)
@@ -50,6 +56,7 @@ f_display_copula <- function(my_copula, grid_1, grid_2) {
     }
   }
 
+  if (plot) {
     graphics::persp(
       x = grid_1,
       y = grid_2,
@@ -64,6 +71,7 @@ f_display_copula <- function(my_copula, grid_1, grid_2) {
       nticks = 4,
       expand = 0.5
     )
+  }
 
   invisible(f_U)
 }
