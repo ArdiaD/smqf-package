@@ -10,6 +10,12 @@
   instead of a `list(X, y)`; `TermStructure` is now the rates `xts` with the
   maturity grid stored in `xts::xtsAttributes(TermStructure)$tau` instead of a
   `list(time, tau, rates)`.
+* Monthly datasets (`FamaFrenchMonthly`, `FungHsieh`, `GoyalWelch`, `Fred`) are
+  now indexed by `zoo::yearmon` instead of a first-of-month `Date`, so they
+  merge by calendar month without first-/end-of-month ambiguity. To combine
+  them with a `Date`-indexed series, coerce its index with `as.yearmon()`.
+* The package documentation now notes that all bundled datasets are
+  illustrative (static snapshots for the book's examples, not maintained feeds).
 
 # smqf 1.1-1
 

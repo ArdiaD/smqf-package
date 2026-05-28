@@ -5,8 +5,8 @@
 \alias{GoyalWelch}
 \title{Goyal–Welch Predictive Variables (Monthly, U.S.)}
 \format{
-An \code{xts} object with monthly observations (1980–2018 in this
-  snapshot) and 15 variables:
+An \code{xts} object with monthly observations (Dec 1979 to Dec 2018
+  in this snapshot), indexed by \code{zoo::yearmon}, and 15 variables:
 \describe{
   \item{Index}{Broad U.S. equity price index level (e.g., S&P 500).}
   \item{D12}{Trailing 12-month cash dividends on the index (level).}
@@ -38,7 +38,7 @@ data("GoyalWelch")
 \description{
 Monthly time series of equity predictors and bond/credit variables commonly
 used in return predictability studies following Goyal & Welch (2008).
-Stored as an \code{xts} object with a monthly \code{Date} index (UTC).
+Stored as an \code{xts} object indexed by month (class \code{zoo::yearmon}).
 }
 \details{
 This object mirrors the variables used in

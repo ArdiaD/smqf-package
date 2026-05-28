@@ -6,7 +6,7 @@
 \title{Fung–Hsieh Factors (Monthly, xts)}
 \format{
 An \code{xts} object with 276 monthly observations
-(from 1994-01 to 2016-12) and 8 columns:
+(Jan 1994 to Dec 2016), indexed by \code{zoo::yearmon}, and 8 columns:
 \describe{
   \item{EMKT}{Equity market factor (broad market return / excess return).}
   \item{RF}{Risk-free rate (monthly).}
@@ -30,15 +30,17 @@ data("FungHsieh")
 }
 \description{
 Monthly time series of commonly used Fung–Hsieh style and macro factors.
-The object is an \code{xts} matrix with a monthly index and the columns
-listed below. Typical use cases include hedge-fund replication and
-factor attribution.
+The object is an \code{xts} matrix indexed by month (class
+\code{zoo::yearmon}) with the columns listed below. Typical use cases
+include hedge-fund replication and factor attribution.
 }
 \details{
 Columns are provided as in the original Fung–Hsieh factor construction.
 Units may appear as percentage points or basis points depending on source/
 vintage; treat the series consistently within your analysis. The time index
-is monthly and stored in UTC; the object class is \code{c("xts","zoo")}.
+is of class \code{zoo::yearmon} (a calendar month with no day-of-month), so
+the series aligns with other monthly data by month, irrespective of any
+day-of-month convention.
 }
 \examples{
 data("FungHsieh")

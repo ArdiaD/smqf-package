@@ -5,8 +5,8 @@
 #' 2015-01 to 2019-12. Used to illustrate high-dimensional regularised
 #' regression (Lasso, Ridge) in a return-prediction context.
 #'
-#' @format An \code{xts} object with 60 monthly observations (index
-#' 2015-01-01 to 2019-12-01) and 129 columns:
+#' @format An \code{xts} object with 60 monthly observations (index Jan 2015
+#' to Dec 2019, class \code{zoo::yearmon}) and 129 columns:
 #' \describe{
 #'   \item{columns 1 to 128}{Standardised FRED-MD macro variables, transformed
 #'     (differenced or log-differenced) to achieve stationarity following the

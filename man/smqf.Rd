@@ -9,6 +9,22 @@
 `smqf` is an R package providing datasets and functions used in the
 book "Statistical Methods in Quantitative Finance" Ardia (2026).
 }
+\section{Datasets}{
+
+All datasets bundled with `smqf` are \strong{illustrative}: they are static
+snapshots provided so that the book's examples remain reproducible, and some
+have been modified for that purpose (e.g., `SP500_const` is thinned to weekly
+frequency, and several series are truncated or re-indexed). They are
+\strong{not} maintained data feeds and should not be relied upon for research
+or production use.
+
+Index conventions: daily series (e.g., `SP500`, `FTSE`, `VIX`,
+`TermStructure`) use a `Date` index; monthly series (`FamaFrenchMonthly`,
+`FungHsieh`, `GoyalWelch`, `Fred`) use a `zoo::yearmon` index (a calendar
+month with no day-of-month, so they merge by month and avoid first-/end-of-
+month ambiguity); `FamaFrenchWeekly` keeps its actual weekly `Date` index.
+}
+
 \section{Acknowledgments}{
 
 The market datasets `SP500`, `SP500_const`, `DJ`, `DJ_const`, `FTSE`,

@@ -6,7 +6,7 @@
 \title{Fama–French Factors (Monthly, xts)}
 \format{
 An \code{xts} object with 360 monthly observations
-(from 1969-01-01 to 1998-12-01) and 4 columns:
+(Jan 1969 to Dec 1998), indexed by \code{zoo::yearmon}, and 4 columns:
 \describe{
   \item{mkt_rf}{Excess return on the market (market return minus risk-free
                 rate), in \%.}
@@ -29,7 +29,8 @@ Values are expressed in \strong{percentage points} (e.g., \code{-1.20}
 means a return of \eqn{-1.20\%}).
 }
 \details{
-The time index is set to the first calendar day of each month.
+The time index is of class \code{zoo::yearmon} (a calendar month with no
+day-of-month), so the series aligns with other monthly data by month.
 Divide by 100 to convert to decimal returns before use in calculations.
 For the weekly version of this dataset see \code{\link{FamaFrenchWeekly}}.
 }
