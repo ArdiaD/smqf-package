@@ -1,10 +1,15 @@
-# smqf 1.2-0
+# smqf 1.1-2
 
 * New dataset `SP500_const`: weekly adjusted close prices for the 505
   S&P 500 constituents (2015 membership, 1962–2015), ported from
   **qrmdata** and thinned to weekly frequency to respect the CRAN size
   limit. Supports the high-dimensional covariance / factor-model exercise
   where the number of constituents exceeds the number of observations.
+* All datasets are now `xts` objects for a consistent interface. `Fred` is
+  now a single `xts` (128 predictors plus the `DJI.Adjusted` response column)
+  instead of a `list(X, y)`; `TermStructure` is now the rates `xts` with the
+  maturity grid stored in `xts::xtsAttributes(TermStructure)$tau` instead of a
+  `list(time, tau, rates)`.
 
 # smqf 1.1-1
 

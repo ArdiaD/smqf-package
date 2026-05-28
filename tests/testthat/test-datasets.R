@@ -19,13 +19,11 @@ test_that("FamaFrenchMonthly loads with correct class and dimensions", {
 })
 
 # Fred ----
-test_that("Fred loads as a list with X and y components", {
+test_that("Fred loads as an xts with predictors and response", {
   data("Fred", package = "smqf")
-  expect_type(Fred, "list")
-  expect_named(Fred, c("X", "y"))
-  expect_equal(dim(Fred$X), c(60L, 128L))
-  expect_equal(dim(Fred$y), c(60L, 1L))
-  expect_equal(colnames(Fred$y), "DJI.Adjusted")
+  expect_s3_class(Fred, "xts")
+  expect_equal(dim(Fred), c(60L, 129L))
+  expect_equal(tail(colnames(Fred), 1L), "DJI.Adjusted")
 })
 
 # FungHsieh ----
@@ -45,10 +43,10 @@ test_that("GoyalWelch loads with correct class", {
 })
 
 # TermStructure ----
-test_that("TermStructure loads as a list with time, tau, rates", {
+test_that("TermStructure loads as an xts with a tau attribute", {
   data("TermStructure", package = "smqf")
-  expect_type(TermStructure, "list")
-  expect_true(all(c("time", "tau", "rates") %in% names(TermStructure)))
-  expect_equal(length(TermStructure$time), nrow(TermStructure$rates))
-  expect_equal(length(TermStructure$tau),  ncol(TermStructure$rates))
+  expect_s3_class(TermStructure, "xts")
+  expect_equal(dim(TermStructure), c(622L, 11L))
+  tau <- xts::xtsAttributes(TermStructure)$tau
+  expect_equal(length(tau), ncol(TermStructure))
 })

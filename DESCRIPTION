@@ -1,6 +1,6 @@
 Package: smqf
 Title: Statistical Methods in Quantitative Finance
-Version: 1.2-0
+Version: 1.1-2
 Authors@R: c(
     person("David", "Ardia", role = c("aut", "cre"),
            email = "david.ardia.ch@gmail.com",
@@ -15,6 +15,7 @@ Description: Provides data and functions used in the book "Statistical Methods i
              by David Ardia (2026).
 License: GPL-3
 LazyData: true
+LazyDataCompression: xz
 Encoding: UTF-8
 Depends: R (>= 4.1.0), xts
 URL: https://github.com/ArdiaD/smqf-package

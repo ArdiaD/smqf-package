@@ -1,22 +1,20 @@
 #' FRED-MD Macro Factors and Dow Jones Returns (Monthly, 2015–2019)
 #'
-#' A list containing a matrix of 128 FRED-MD macroeconomic predictors and a
-#' vector of monthly Dow Jones Industrial Average log-returns, aligned over the
-#' period 2015-01 to 2019-12. Used to illustrate high-dimensional regularised
+#' An \code{xts} object holding 128 FRED-MD macroeconomic predictors and the
+#' monthly Dow Jones Industrial Average log-returns, aligned over the period
+#' 2015-01 to 2019-12. Used to illustrate high-dimensional regularised
 #' regression (Lasso, Ridge) in a return-prediction context.
 #'
-#' @format A named list with two components:
+#' @format An \code{xts} object with 60 monthly observations (index
+#' 2015-01-01 to 2019-12-01) and 129 columns:
 #' \describe{
-#'   \item{X}{A \eqn{60 \times 128}{60 x 128} numeric matrix of standardised
-#'     FRED-MD macro variables (monthly, January 2015 to December 2019).
-#'     Row names are \code{"YYYY-MM-01"} strings; column names are FRED-MD
-#'     series codes (e.g., \code{"INDPRO"}, \code{"CPIAUCSL"}, \code{"GS10"}).
-#'     The series have been transformed (differenced or log-differenced) to
-#'     achieve stationarity following the FRED-MD transformation codes.}
-#'   \item{y}{A \eqn{60 \times 1}{60 x 1} numeric matrix of one-month-ahead
-#'     Dow Jones Industrial Average log-returns (column name
-#'     \code{"DJI.Adjusted"}), shifted so that row \eqn{t} of \code{X}
-#'     predicts row \eqn{t} of \code{y}.}
+#'   \item{columns 1 to 128}{Standardised FRED-MD macro variables, transformed
+#'     (differenced or log-differenced) to achieve stationarity following the
+#'     FRED-MD transformation codes. Column names are FRED-MD series codes
+#'     (e.g., \code{"INDPRO"}, \code{"CPIAUCSL"}, \code{"GS10"}).}
+#'   \item{\code{DJI.Adjusted} (final column)}{One-month-ahead Dow Jones
+#'     Industrial Average log-returns, aligned so that row \eqn{t} of the
+#'     predictors corresponds to row \eqn{t} of the response.}
 #' }
 #'
 #' @details
@@ -43,15 +41,15 @@
 #'
 #' @examples
 #' data("Fred")
-#' X <- Fred$X   # 60 x 128 macro predictors
-#' y <- Fred$y   # 60 x 1  DJ log-returns
+#' class(Fred)                                    # "xts" "zoo"
+#' y <- Fred[, "DJI.Adjusted"]                    # response (60 x 1)
+#' X <- Fred[, colnames(Fred) != "DJI.Adjusted"]  # 128 macro predictors
 #' dim(X)
-#' head(rownames(X))
 #'
-#' # Lasso with cross-validation (requires glmnet)
+#' # Lasso with cross-validation (requires glmnet, which expects matrices)
 #' if (requireNamespace("glmnet", quietly = TRUE)) {
 #'   set.seed(1234)
-#'   fit <- glmnet::cv.glmnet(X, y, alpha = 1)
+#'   fit <- glmnet::cv.glmnet(as.matrix(X), as.numeric(y), alpha = 1)
 #'   coef(fit, s = "lambda.min")[coef(fit, s = "lambda.min")[,1] != 0, , drop = FALSE]
 #' }
 #'
