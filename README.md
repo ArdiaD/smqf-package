@@ -14,6 +14,6 @@ By using `smqf` you agree to the following rules:
 You can install the development version of `smqf` from GitHub:
 
 ``` r
-# install.packages("devtools") # if needed
-devtools::install_github("ArdiaD/smqf-package")
+# install.packages("pak") # if needed
+pak::pak("ArdiaD/smqf-package")
 ```
