@@ -1,3 +1,8 @@
+# smqf 1.1-1
+
+* Import `xts::as.xts` so the `xts` dependency is registered in the
+  NAMESPACE (resolves the "package in Depends not imported from" note).
+
 # smqf 1.1-0
 
 * Initial CRAN release.
