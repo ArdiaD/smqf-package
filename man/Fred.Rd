@@ -22,7 +22,7 @@ A named list with two components:
 \source{
 \itemize{
   \item McCracken, M. W., & Ng, S. FRED-MD database,
-    \url{https://research.stlouisfed.org/econ/mccracken/fred-databases/}.
+    \url{https://www.stlouisfed.org/research/economists/mccracken/fred-databases}.
   \item Dow Jones daily prices via \code{quantmod::getSymbols("^DJI")},
     Yahoo Finance.
 }
