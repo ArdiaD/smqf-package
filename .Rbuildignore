@@ -2,3 +2,4 @@
 ^precran\.R$
 ^smqf-package\.Rproj$
 ^\.github$
+^dist$
