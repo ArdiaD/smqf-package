@@ -1,21 +1,12 @@
 ## Tests for the six smqf datasets -------------------------------------------
 
-# FamaFrenchWeekly ----
-test_that("FamaFrenchWeekly loads with correct class and dimensions", {
-  data("FamaFrenchWeekly", package = "smqf")
-  expect_s3_class(FamaFrenchWeekly, "xts")
-  expect_equal(ncol(FamaFrenchWeekly), 4L)
-  expect_equal(colnames(FamaFrenchWeekly), c("mkt_rf", "smb", "hml", "rf"))
-  expect_true(nrow(FamaFrenchWeekly) > 4000L)
-})
-
-# FamaFrenchMonthly ----
-test_that("FamaFrenchMonthly loads with correct class and dimensions", {
-  data("FamaFrenchMonthly", package = "smqf")
-  expect_s3_class(FamaFrenchMonthly, "xts")
-  expect_equal(ncol(FamaFrenchMonthly), 4L)
-  expect_equal(colnames(FamaFrenchMonthly), c("mkt_rf", "smb", "hml", "rf"))
-  expect_equal(nrow(FamaFrenchMonthly), 360L)
+# FamaFrench ----
+test_that("FamaFrench loads with correct class and dimensions", {
+  data("FamaFrench", package = "smqf")
+  expect_s3_class(FamaFrench, "xts")
+  expect_equal(ncol(FamaFrench), 4L)
+  expect_equal(colnames(FamaFrench), c("mkt_rf", "smb", "hml", "rf"))
+  expect_true(nrow(FamaFrench) > 4000L)
 })
 
 # Fred ----

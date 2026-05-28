@@ -12,10 +12,10 @@
 #' or production use.
 #'
 #' Index conventions: daily series (e.g., `SP500`, `FTSE`, `VIX`,
-#' `TermStructure`) use a `Date` index; monthly series (`FamaFrenchMonthly`,
-#' `FungHsieh`, `GoyalWelch`, `Fred`) use a `zoo::yearmon` index (a calendar
-#' month with no day-of-month, so they merge by month and avoid first-/end-of-
-#' month ambiguity); `FamaFrenchWeekly` keeps its actual weekly `Date` index.
+#' `TermStructure`) use a `Date` index; monthly series (`FungHsieh`,
+#' `GoyalWelch`, `Fred`) use a `zoo::yearmon` index (a calendar month with no
+#' day-of-month, so they merge by month and avoid first-/end-of-month
+#' ambiguity); `FamaFrench` is a weekly series with a `Date` index.
 #'
 #' @section Acknowledgments:
 #' The market datasets `SP500`, `SP500_const`, `DJ`, `DJ_const`, `FTSE`,
