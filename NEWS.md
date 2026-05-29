@@ -1,3 +1,14 @@
+# smqf 1.1-3
+
+* Documentation maintenance release. Corrected the package title to
+  "Statistical Methods for Quantitative Finance" (matching the companion
+  book) throughout `DESCRIPTION`, the package-level help, `README.md`, and
+  `inst/CITATION`.
+* Clarified the `Fred` dataset documentation to describe the consolidated
+  `xts` (128 predictor columns plus the `DJI.Adjusted` response column)
+  rather than the former `list(X, y)` structure.
+* No changes to data or to any exported function.
+
 # smqf 1.1-2
 
 * New dataset `SP500_const`: weekly adjusted close prices for the 505

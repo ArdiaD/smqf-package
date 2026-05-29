@@ -1,20 +1,20 @@
 citHeader("To cite 'smqf' in publications use:")
 
 bibentry(bibtype = "Book",
-  title     = "Statistical Methods in Quantitative Finance",
+  title     = "Statistical Methods for Quantitative Finance",
   author    = c(person("David", "Ardia")),
   year      = "2026",
   publisher = "CRC Press",
   textVersion = paste("Ardia, D. (2026).",
-    "Statistical Methods in Quantitative Finance. CRC Press.")
+    "Statistical Methods for Quantitative Finance. CRC Press.")
 )
 
 bibentry(bibtype = "Manual",
-  title  = "smqf: Statistical Methods in Quantitative Finance",
+  title  = "smqf: Statistical Methods for Quantitative Finance",
   author = c(person("David", "Ardia")),
   year   = "2026",
   note   = "R package companion to Ardia (2026), CRC Press",
   textVersion = paste("Ardia, D. (2026).",
-    "smqf: Statistical Methods in Quantitative Finance.",
+    "smqf: Statistical Methods for Quantitative Finance.",
     "R package companion to Ardia (2026), CRC Press.")
 )
