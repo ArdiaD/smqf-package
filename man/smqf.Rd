@@ -7,7 +7,7 @@
 \title{smqf: Statistical Methods for Quantitative Finance}
 \description{
 `smqf` is an R package providing datasets and functions used in the
-book "Statistical Methods for Quantitative Finance" Ardia (2026).
+book "Statistical Methods for Quantitative Finance" by Ardia (2026).
 }
 \section{Datasets}{
 
