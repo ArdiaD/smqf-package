@@ -4,10 +4,10 @@
 \name{smqf}
 \alias{smqf-package}
 \alias{smqf}
-\title{smqf: Statistical Methods in Quantitative Finance}
+\title{smqf: Statistical Methods for Quantitative Finance}
 \description{
 `smqf` is an R package providing datasets and functions used in the
-book "Statistical Methods in Quantitative Finance" Ardia (2026).
+book "Statistical Methods for Quantitative Finance" Ardia (2026).
 }
 \section{Datasets}{
 
@@ -38,7 +38,7 @@ and the individual dataset help pages for details.
 }
 
 \references{
-David Ardia (2026). *Statistical Methods in Quantitative Finance*. CRC Press.
+David Ardia (2026). *Statistical Methods for Quantitative Finance*. CRC Press.
 
 Hofert, M., Hornik, K., & McNeil, A. J. *qrmdata: Data Sets for
 Quantitative Risk Management Practice*.

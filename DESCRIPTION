@@ -1,5 +1,5 @@
 Package: smqf
-Title: Statistical Methods in Quantitative Finance
+Title: Statistical Methods for Quantitative Finance
 Version: 1.1-2
 Authors@R: c(
     person("David", "Ardia", role = c("aut", "cre"),
@@ -11,7 +11,7 @@ Authors@R: c(
            comment = "Original author of qrmdata, from which 15 market datasets were ported under GPL-2 | GPL-3"),
     person("Alexander J.","McNeil", role = c("ctb", "cph"),
            comment = "Original author of qrmdata, from which 15 market datasets were ported under GPL-2 | GPL-3"))
-Description: Provides data and functions used in the book "Statistical Methods in Quantitative Finance"
+Description: Provides data and functions used in the book "Statistical Methods for Quantitative Finance"
              by David Ardia (2026).
 License: GPL-3
 LazyData: true

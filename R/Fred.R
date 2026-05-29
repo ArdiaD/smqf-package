@@ -18,13 +18,13 @@
 #' }
 #'
 #' @details
-#' The predictors in \code{X} were downloaded from the McCracken–Ng FRED-MD
-#' database and transformed according to the recommended stationarity codes.
-#' The target \code{y} was obtained from Yahoo Finance via
-#' \code{quantmod::getSymbols("^DJI")} and converted to monthly log-returns.
-#' Both series are restricted to the 60-month window 2015-01 to 2019-12 and
-#' temporally aligned so that \code{X[t, ]} can be used to predict
-#' \code{y[t]}.
+#' The 128 macro predictors (columns 1 to 128) were downloaded from the
+#' McCracken–Ng FRED-MD database and transformed according to the recommended
+#' stationarity codes. The target column \code{DJI.Adjusted} was obtained from
+#' Yahoo Finance via \code{quantmod::getSymbols("^DJI")} and converted to
+#' monthly log-returns. All series are restricted to the 60-month window
+#' 2015-01 to 2019-12 and temporally aligned so that the predictor columns in
+#' row \eqn{t} can be used to predict \code{DJI.Adjusted} in row \eqn{t}.
 #'
 #' @source
 #' \itemize{
@@ -54,7 +54,7 @@
 #' }
 #'
 #' @seealso The book chapter on \emph{Dimension Reduction} (Chapter 4 of
-#'   \emph{Statistical Methods in Quantitative Finance}) introduces Lasso and
+#'   \emph{Statistical Methods for Quantitative Finance}) introduces Lasso and
 #'   Ridge regression on the lower-dimensional \code{\link{GoyalWelch}} dataset;
 #'   \code{Fred} provides a complementary high-dimensional (\eqn{p \gg n}) test
 #'   bed for the same regularised-regression workflow.
