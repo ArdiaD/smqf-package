@@ -7,8 +7,10 @@
 f_gumbel_copula_2d_pdf(u, theta)
 }
 \arguments{
-\item{u}{Numeric vector of length 2 with entries in \eqn{(0,1]}:
-the evaluation point \eqn{(u_1,u_2)}.}
+\item{u}{Numeric vector of length 2 with entries in the open interval
+\eqn{(0,1)}: the evaluation point \eqn{(u_1,u_2)}. The boundary value
+1 is excluded because the density is not finite at the corner
+\eqn{(1,1)} for \eqn{\theta > 1} (upper-tail dependence).}
 
 \item{theta}{Numeric scalar, the Gumbel dependence parameter \eqn{\theta \ge 1}.}
 }

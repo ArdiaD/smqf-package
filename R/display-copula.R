@@ -11,6 +11,11 @@
 #'   \code{graphics::persp()}. If \code{FALSE}, no graphics device is opened and
 #'   only the evaluated matrix is returned (useful for testing or
 #'   non-interactive use).
+#' @param zlab Character string used as the vertical-axis label of the
+#'   \code{persp()} plot. Defaults to \code{"Pdf"}; set e.g.
+#'   \code{zlab = "Cdf"} when displaying a copula CDF.
+#' @param ... Additional arguments passed to \code{graphics::persp()}
+#'   (e.g., \code{theta}, \code{phi}, \code{col}).
 #'
 #' @return Invisibly returns the matrix of evaluated copula values
 #'   \code{f_U}, with rows corresponding to \code{grid_1} and columns to \code{grid_2}.
@@ -32,7 +37,8 @@
 #'
 #' @importFrom graphics persp
 #' @export
-f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE) {
+f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE,
+                             zlab = "Pdf", ...) {
 
   ## --- input validation ---
   if (!is.function(my_copula))
@@ -43,6 +49,8 @@ f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE) {
     stop("'grid_2' must be a non-empty numeric vector.", call. = FALSE)
   if (!is.logical(plot) || length(plot) != 1L || is.na(plot))
     stop("'plot' must be a single logical value (TRUE or FALSE).", call. = FALSE)
+  if (!is.character(zlab) || length(zlab) != 1L || is.na(zlab))
+    stop("'zlab' must be a single character string.", call. = FALSE)
   ## --- end validation ---
 
   n1 <- length(grid_1)
@@ -57,13 +65,13 @@ f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE) {
   }
 
   if (plot) {
-    graphics::persp(
+    persp_args <- list(
       x = grid_1,
       y = grid_2,
       z = f_U,
       xlab = "U_1",
       ylab = "U_2",
-      zlab = "Pdf",
+      zlab = zlab,
       theta = 30,
       r = 20,
       col = "yellow",
@@ -71,6 +79,10 @@ f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE) {
       nticks = 4,
       expand = 0.5
     )
+    # User-supplied persp() arguments override the defaults above
+    dots <- list(...)
+    persp_args[names(dots)] <- dots
+    do.call(graphics::persp, persp_args)
   }
 
   invisible(f_U)

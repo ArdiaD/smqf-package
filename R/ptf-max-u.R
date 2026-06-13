@@ -30,6 +30,10 @@
 #' \describe{
 #'   \item{\code{w}}{Numeric vector of optimal portfolio weights (length \eqn{d}).}
 #'   \item{\code{EU}}{Scalar: value of the (approximate) expected utility at \code{w} (sign-corrected).}
+#'   \item{\code{status}}{Integer: the \code{nloptr} termination status code.
+#'     Positive values indicate success; a warning is issued (and the
+#'     possibly invalid solution returned) when the status is negative,
+#'     i.e., when the optimizer failed to converge.}
 #' }
 #'
 #' @details
@@ -61,6 +65,8 @@
 #' res <- f_ptf_max_U(gamma = 5, w_max = 0.8, M1, M2, M3, M4)
 #' res$w; res$EU
 #'
+#' @seealso \code{\link{f_portfolio_moments}}, \code{\link{f_efficient_frontier}},
+#'   \code{\link[nloptr]{nloptr}}
 #' @importFrom nloptr nloptr
 #' @export
 f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
@@ -125,10 +131,16 @@ f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
                                     maxeval = 10000,
                                     print_level = 0,
                                     check_derivatives = FALSE))
+
+  if (sol$status < 0)
+    warning("nloptr did not converge (status ", sol$status, "): ",
+            sol$message, call. = FALSE)
+
   wopt <- sol$solution
   EU   <- -sol$objective
 
   out <- list("w" = wopt,
-              "EU" = EU)
+              "EU" = EU,
+              "status" = sol$status)
   out
 }

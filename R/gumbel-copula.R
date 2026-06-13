@@ -36,8 +36,9 @@
 #' @export
 f_gumbel_copula_2d_cdf <- function(u, theta) {
   ## --- input validation ---
-  if (!is.numeric(u) || length(u) != 2L || any(u <= 0) || any(u > 1))
-    stop("'u' must be a numeric vector of length 2 with entries in (0, 1].",
+  if (!is.numeric(u) || length(u) != 2L || any(!is.finite(u)) ||
+      any(u <= 0) || any(u > 1))
+    stop("'u' must be a finite numeric vector of length 2 with entries in (0, 1].",
          call. = FALSE)
   if (!is.numeric(theta) || length(theta) != 1L || !is.finite(theta) || theta < 1)
     stop("'theta' must be a finite numeric scalar >= 1.", call. = FALSE)
@@ -53,8 +54,10 @@ f_gumbel_copula_2d_cdf <- function(u, theta) {
 #' Computes the bivariate Gumbel copula probability density function (PDF)
 #' at \eqn{(u_1,u_2)} for dependence parameter \eqn{\theta \ge 1}.
 #'
-#' @param u Numeric vector of length 2 with entries in \eqn{(0,1]}:
-#'   the evaluation point \eqn{(u_1,u_2)}.
+#' @param u Numeric vector of length 2 with entries in the open interval
+#'   \eqn{(0,1)}: the evaluation point \eqn{(u_1,u_2)}. The boundary value
+#'   1 is excluded because the density is not finite at the corner
+#'   \eqn{(1,1)} for \eqn{\theta > 1} (upper-tail dependence).
 #' @param theta Numeric scalar, the Gumbel dependence parameter \eqn{\theta \ge 1}.
 #'
 #' @return A numeric scalar: \eqn{c(u_1,u_2;\theta)}.
@@ -86,8 +89,9 @@ f_gumbel_copula_2d_cdf <- function(u, theta) {
 #' @export
 f_gumbel_copula_2d_pdf <- function(u, theta) {
   ## --- input validation ---
-  if (!is.numeric(u) || length(u) != 2L || any(u <= 0) || any(u > 1))
-    stop("'u' must be a numeric vector of length 2 with entries in (0, 1].",
+  if (!is.numeric(u) || length(u) != 2L || any(!is.finite(u)) ||
+      any(u <= 0) || any(u >= 1))
+    stop("'u' must be a finite numeric vector of length 2 with entries in (0, 1).",
          call. = FALSE)
   if (!is.numeric(theta) || length(theta) != 1L || !is.finite(theta) || theta < 1)
     stop("'theta' must be a finite numeric scalar >= 1.", call. = FALSE)

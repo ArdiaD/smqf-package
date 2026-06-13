@@ -4,7 +4,7 @@
 \alias{f_display_copula}
 \title{Display a Bivariate Copula Surface}
 \usage{
-f_display_copula(my_copula, grid_1, grid_2, plot = TRUE)
+f_display_copula(my_copula, grid_1, grid_2, plot = TRUE, zlab = "Pdf", ...)
 }
 \arguments{
 \item{my_copula}{A function that takes a numeric vector \code{c(u1, u2)} as input
@@ -17,6 +17,13 @@ and returns a scalar value (e.g., a copula PDF or CDF).}
 \code{graphics::persp()}. If \code{FALSE}, no graphics device is opened and
 only the evaluated matrix is returned (useful for testing or
 non-interactive use).}
+
+\item{zlab}{Character string used as the vertical-axis label of the
+\code{persp()} plot. Defaults to \code{"Pdf"}; set e.g.
+\code{zlab = "Cdf"} when displaying a copula CDF.}
+
+\item{...}{Additional arguments passed to \code{graphics::persp()}
+(e.g., \code{theta}, \code{phi}, \code{col}).}
 }
 \value{
 Invisibly returns the matrix of evaluated copula values

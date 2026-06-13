@@ -97,9 +97,25 @@
 #' # Co-skewness / co-kurtosis matrices in d x d^2 / d x d^3 form (e.g. from
 #' # PerformanceAnalytics::M3.MM() / M4.MM()) can be passed as M3, M4.
 #'
+#' @seealso \code{\link{f_ptf_max_U}}, \code{\link{f_efficient_frontier}}
 #' @export
 f_portfolio_moments <- function(w, M2 = NULL, M3 = NULL, M4 = NULL) {
-  stopifnot(is.numeric(w))
+  ## --- input validation ---
+  if (!is.numeric(w) || length(w) == 0L || any(!is.finite(w)))
+    stop("'w' must be a non-empty finite numeric vector.", call. = FALSE)
+  d <- length(w)
+  if (!is.null(M2) && (!is.numeric(M2) || !is.matrix(M2) ||
+                       nrow(M2) != d || ncol(M2) != d))
+    stop("'M2' must be a numeric ", d, " x ", d, " matrix.", call. = FALSE)
+  if (!is.null(M3) && (!is.numeric(M3) || !is.matrix(M3) ||
+                       nrow(M3) != d || ncol(M3) != d^2))
+    stop("'M3' must be a numeric ", d, " x ", d^2,
+         " co-moment matrix.", call. = FALSE)
+  if (!is.null(M4) && (!is.numeric(M4) || !is.matrix(M4) ||
+                       nrow(M4) != d || ncol(M4) != d^3))
+    stop("'M4' must be a numeric ", d, " x ", d^3,
+         " co-moment matrix.", call. = FALSE)
+  ## --- end validation ---
   list(
     m2 = if (!is.null(M2)) .portm2(w, M2) else NULL,
     m3 = if (!is.null(M3)) .portm3(w, M3) else NULL,

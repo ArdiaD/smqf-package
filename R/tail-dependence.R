@@ -65,10 +65,10 @@
 f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
 
   ## --- input validation ---
-  if (!is.numeric(x) || length(x) == 0L)
-    stop("'x' must be a non-empty numeric vector.", call. = FALSE)
-  if (!is.numeric(y) || length(y) == 0L)
-    stop("'y' must be a non-empty numeric vector.", call. = FALSE)
+  if (!is.numeric(x) || length(x) == 0L || any(!is.finite(x)))
+    stop("'x' must be a non-empty finite numeric vector.", call. = FALSE)
+  if (!is.numeric(y) || length(y) == 0L || any(!is.finite(y)))
+    stop("'y' must be a non-empty finite numeric vector.", call. = FALSE)
   if (length(x) != length(y))
     stop("'x' and 'y' must have the same length.", call. = FALSE)
   if (!is.numeric(alpha) || length(alpha) != 1L ||
@@ -94,7 +94,7 @@ f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
     excorr <- stats::cor(x[idx_x & idx_y], y[idx_x & idx_y])
   } else {
     # cor() is undefined for fewer than two joint-tail observations.
-    excorr <- NA
+    excorr <- NA_real_
   }
 
   out <- list(lambda = lambda,

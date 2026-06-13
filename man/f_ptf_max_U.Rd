@@ -27,6 +27,10 @@ A list with:
 \describe{
   \item{\code{w}}{Numeric vector of optimal portfolio weights (length \eqn{d}).}
   \item{\code{EU}}{Scalar: value of the (approximate) expected utility at \code{w} (sign-corrected).}
+  \item{\code{status}}{Integer: the \code{nloptr} termination status code.
+    Positive values indicate success; a warning is issued (and the
+    possibly invalid solution returned) when the status is negative,
+    i.e., when the optimizer failed to converge.}
 }
 }
 \description{
@@ -78,4 +82,8 @@ Jondeau, E., Poon, S.-H., & Rockinger, M. (2007). \emph{Financial Modeling
 Under Non-Gaussian Distributions}.
 Harvey, C. R., Liechty, J. C., Liechty, M. W., & Müller, P. (2010). Portfolio
 selection with higher moments.
+}
+\seealso{
+\code{\link{f_portfolio_moments}}, \code{\link{f_efficient_frontier}},
+  \code{\link[nloptr]{nloptr}}
 }
