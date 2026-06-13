@@ -46,3 +46,21 @@ test_that("f_student_copula_pdf: larger nu approaches normal copula density", {
   val_n <- as.numeric(f_normal_copula_pdf(u, mu, Sigma))
   expect_equal(val_t, val_n, tolerance = 0.01)
 })
+
+test_that("f_student_copula_pdf: no gamma() overflow for very large nu", {
+  mu    <- c(0, 0)
+  Sigma <- matrix(c(1, 0.5, 0.5, 1), 2, 2)
+  u     <- c(0.3, 0.7)
+  # gamma((nu + N)/2) / gamma(nu/2) overflows to NaN for nu >~ 344 if
+  # computed directly; the log-space implementation must stay finite.
+  val_340  <- as.numeric(f_student_copula_pdf(u, mu, Sigma, nu = 340))
+  val_345  <- as.numeric(f_student_copula_pdf(u, mu, Sigma, nu = 345))
+  val_1000 <- as.numeric(f_student_copula_pdf(u, mu, Sigma, nu = 1000))
+  expect_true(is.finite(val_340))
+  expect_true(is.finite(val_345))
+  expect_true(is.finite(val_1000))
+  expect_equal(val_340, val_345, tolerance = 1e-3)
+  # nu -> Inf limit: Student copula converges to the Gaussian copula
+  val_n <- as.numeric(f_normal_copula_pdf(u, mu, Sigma))
+  expect_equal(val_1000, val_n, tolerance = 5e-3)
+})

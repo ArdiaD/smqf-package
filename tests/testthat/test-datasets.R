@@ -1,4 +1,4 @@
-## Tests for the six smqf datasets -------------------------------------------
+## Tests for the five smqf datasets -------------------------------------------
 
 # FamaFrench ----
 test_that("FamaFrench loads with correct class and dimensions", {

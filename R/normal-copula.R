@@ -58,8 +58,9 @@
 f_normal_copula_pdf <- function(u, mu, Sigma) {
 
   ## --- input validation ---
-  if (!is.numeric(u) || length(u) == 0L || any(u <= 0) || any(u >= 1))
-    stop("'u' must be a numeric vector with all entries in (0, 1).",
+  if (!is.numeric(u) || length(u) == 0L || any(!is.finite(u)) ||
+      any(u <= 0) || any(u >= 1))
+    stop("'u' must be a finite numeric vector with all entries in (0, 1).",
          call. = FALSE)
   N <- length(u)
   if (!is.numeric(mu) || length(mu) != N || any(!is.finite(mu)))

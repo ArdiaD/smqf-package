@@ -66,5 +66,6 @@ ef$volatility[c(1, 20)]
 Markowitz, H. (1952). Portfolio Selection. \emph{Journal of Finance}, 7(1), 77–91.
 }
 \seealso{
-\code{\link[pracma]{quadprog}}
+\code{\link{f_ptf_max_U}}, \code{\link{f_portfolio_moments}},
+  \code{\link[pracma]{quadprog}}
 }

@@ -42,7 +42,8 @@
 #' @references
 #' Markowitz, H. (1952). Portfolio Selection. \emph{Journal of Finance}, 7(1), 77–91.
 #'
-#' @seealso \code{\link[pracma]{quadprog}}
+#' @seealso \code{\link{f_ptf_max_U}}, \code{\link{f_portfolio_moments}},
+#'   \code{\link[pracma]{quadprog}}
 #'
 #' @examples
 #' set.seed(1)
@@ -59,16 +60,16 @@
 f_efficient_frontier <- function(mu, Sigma, n_ptf) {
   # ---- validate -------------------------------------------------------------
   if (!is.numeric(mu) || any(!is.finite(mu)))
-    stop("`mu` must be a finite numeric vector.", call. = FALSE)
+    stop("'mu' must be a finite numeric vector.", call. = FALSE)
   if (!is.matrix(Sigma) || nrow(Sigma) != length(mu) || ncol(Sigma) != length(mu)) {
-    stop("`Sigma` must be an N x N matrix matching length(mu).", call. = FALSE)
+    stop("'Sigma' must be an N x N matrix matching length(mu).", call. = FALSE)
   }
   if (!is.numeric(n_ptf) || length(n_ptf) != 1L || n_ptf < 2 ||
       n_ptf != as.integer(n_ptf)) {
-    stop("`n_ptf` must be an integer >= 2.", call. = FALSE)
+    stop("'n_ptf' must be an integer >= 2.", call. = FALSE)
   }
   if (any(!is.finite(Sigma))) {
-    stop("`Sigma` must contain only finite values.", call. = FALSE)
+    stop("'Sigma' must contain only finite values.", call. = FALSE)
   }
   N <- length(mu)
 

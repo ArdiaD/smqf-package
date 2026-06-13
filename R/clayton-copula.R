@@ -43,16 +43,16 @@
 f_clayton_copula_2d_pdf <- function(u, theta) {
   # Validate inputs
   if (!is.numeric(u) || length(u) != 2L || any(!is.finite(u))) {
-    stop("`u` must be a numeric vector of length 2 with finite values.", call. = FALSE)
+    stop("'u' must be a numeric vector of length 2 with finite values.", call. = FALSE)
   }
   if (any(u <= 0) || any(u > 1)) {
-    stop("`u` must lie in (0, 1].", call. = FALSE)
+    stop("'u' must lie in (0, 1].", call. = FALSE)
   }
   if (!is.numeric(theta) || length(theta) != 1L || !is.finite(theta)) {
-    stop("`theta` must be a finite numeric scalar.", call. = FALSE)
+    stop("'theta' must be a finite numeric scalar.", call. = FALSE)
   }
   if (theta < 0) {
-    stop("`theta` must be >= 0. (Clayton requires nonnegative dependence.)", call. = FALSE)
+    stop("'theta' must be >= 0. (Clayton requires nonnegative dependence.)", call. = FALSE)
   }
 
   # Independence limit: theta -> 0 => density = 1

@@ -58,8 +58,9 @@
 f_student_copula_pdf <- function (u, mu, Sigma, nu) {
 
   ## --- input validation ---
-  if (!is.numeric(u) || length(u) == 0L || any(u <= 0) || any(u >= 1))
-    stop("'u' must be a numeric vector with all entries in (0, 1).",
+  if (!is.numeric(u) || length(u) == 0L || any(!is.finite(u)) ||
+      any(u <= 0) || any(u >= 1))
+    stop("'u' must be a finite numeric vector with all entries in (0, 1).",
          call. = FALSE)
   N <- length(u)
   if (!is.numeric(mu) || length(mu) != N || any(!is.finite(mu)))
@@ -68,7 +69,7 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
   if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
       nrow(Sigma) != N || ncol(Sigma) != N || any(!is.finite(Sigma)))
     stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
-  if (!is.numeric(nu) || length(nu) != 1L || nu <= 0)
+  if (!is.numeric(nu) || length(nu) != 1L || !is.finite(nu) || nu <= 0)
     stop("'nu' must be a positive numeric scalar.", call. = FALSE)
   ## --- end validation ---
 
@@ -77,7 +78,10 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
   x <- mu + s * qt(p = u, df = nu)
 
   z2 <- drop((x - mu) %*% pracma::mldivide(Sigma, (x - mu)))
-  K  <- (nu * pi)^(-N / 2) * gamma((nu + N) / 2) / gamma(nu / 2) * ((det(Sigma))^(-0.5))
+  ## Gamma ratio computed in log space: gamma((nu + N)/2) / gamma(nu/2)
+  ## overflows to Inf/Inf = NaN for nu >~ 344 if computed directly.
+  K  <- exp(lgamma((nu + N) / 2) - lgamma(nu / 2)) *
+    (nu * pi)^(-N / 2) * ((det(Sigma))^(-0.5))
   Numerator <- K * (1 + z2 / nu)^(-(nu + N) / 2)
 
   fs <- dt((x - mu) / s, nu) / s

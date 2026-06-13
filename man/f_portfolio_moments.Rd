@@ -64,3 +64,6 @@ f_portfolio_moments(w, M2 = M2)$m2
 Jondeau, E., Poon, S.-H., & Rockinger, M. (2007). \emph{Financial
 Modeling Under Non-Gaussian Distributions}. Springer.
 }
+\seealso{
+\code{\link{f_ptf_max_U}}, \code{\link{f_efficient_frontier}}
+}
