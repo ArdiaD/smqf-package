@@ -55,3 +55,14 @@ test_that("input validation: non-numeric x or y raises error", {
   expect_error(f_tail_dependence("a", rnorm(5), alpha = 0.1), "'x'")
   expect_error(f_tail_dependence(rnorm(5), "b", alpha = 0.1), "'y'")
 })
+
+test_that("f_tail_dependence rejects non-finite alpha with its own message", {
+  set.seed(1)
+  x <- rnorm(200)
+  y <- 0.7 * x + sqrt(1 - 0.7^2) * rnorm(200)
+  # NA_real_ and NaN are numeric scalars, so they used to reach `alpha <= 0`
+  # and fail with "missing value where TRUE/FALSE needed".
+  for (a in list(NA_real_, NaN, Inf, -Inf)) {
+    expect_error(f_tail_dependence(x, y, alpha = a), "'alpha'")
+  }
+})

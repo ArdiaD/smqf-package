@@ -107,7 +107,7 @@ only up to solver tolerance.
 
 This function is a port of \code{mvskPortfolio()} from the
 \strong{mvskPortfolios} package by Dries Cornilly and Kris Boudt
-(\url{https://github.com/cdries/mvskPortfolios}), redistributed here under
+(\url{https://github.com/c3jg/mvskPortfolios}), redistributed here under
 the same GPL (\eqn{\ge 2}) licence so that the book's examples install from
 CRAN alone. The algorithm is unchanged; the internal calls to non-exported
 \pkg{PerformanceAnalytics} symbols have been replaced by the equivalent

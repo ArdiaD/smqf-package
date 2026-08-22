@@ -10,10 +10,16 @@
 #' @param mu Numeric vector of length \eqn{N}, the mean of the corresponding
 #'   multivariate normal distribution (usually zeros for a copula).
 #' @param Sigma Numeric positive-definite \eqn{N \times N} covariance matrix.
+#' @param log Logical; if \code{TRUE} the log-density is returned. Defaults to
+#'   \code{FALSE}. In high dimension the density itself may overflow or
+#'   underflow the double-precision range even though its logarithm is
+#'   perfectly well behaved, so \code{log = TRUE} is the safe choice for
+#'   likelihoods.
 #'
 #' @return A numeric scalar: the value of the Gaussian copula density
-#'   \eqn{c(u; \mu, \Sigma)} at the point \code{u}. The value is returned
-#'   as a plain numeric scalar (not a \eqn{1 \times 1} matrix).
+#'   \eqn{c(u; \mu, \Sigma)} at the point \code{u}, or its logarithm when
+#'   \code{log = TRUE}. The value is returned as a plain numeric scalar (not a
+#'   \eqn{1 \times 1} matrix).
 #'
 #' @details
 #' The Gaussian copula density is
@@ -50,12 +56,16 @@
 #' # Compare with independence (Sigma = I)
 #' f_normal_copula_pdf(c(0.5, 0.8), mu, diag(2))
 #'
+#' # The independence copula has density 1 everywhere, in any dimension
+#' d <- 300
+#' f_normal_copula_pdf(rep(0.99, d), rep(0, d), diag(d))
+#'
 #' @seealso \code{\link{f_student_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
 #'   \code{\link{f_gumbel_copula_2d_pdf}}
 #' @importFrom stats qnorm dnorm
 #' @importFrom pracma mldivide
 #' @export
-f_normal_copula_pdf <- function(u, mu, Sigma) {
+f_normal_copula_pdf <- function(u, mu, Sigma, log = FALSE) {
 
   ## --- input validation ---
   if (!is.numeric(u) || length(u) == 0L || any(!is.finite(u)) ||
@@ -69,6 +79,8 @@ f_normal_copula_pdf <- function(u, mu, Sigma) {
   if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
       nrow(Sigma) != N || ncol(Sigma) != N || any(!is.finite(Sigma)))
     stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
+  if (!is.logical(log) || length(log) != 1L || is.na(log))
+    stop("'log' must be TRUE or FALSE.", call. = FALSE)
 
   ## Sigma must be a genuine covariance matrix: symmetric and positive
   ## definite. Without this check an asymmetric matrix is silently accepted
@@ -90,17 +102,21 @@ f_normal_copula_pdf <- function(u, mu, Sigma) {
 
   x <- qnorm(p = u, mean = mu, sd = s)
 
-  # Work through the log: det(Sigma) underflows to zero for large N -- it is
-  # already 9e-30 at N = 200 -- which would turn the density into Inf.
-  log_num <- -0.5 * N * log(2 * pi) -
+  # The whole ratio is formed in log space and exponentiated once, at the end.
+  # Doing it in two steps -- exp(log_num) / prod(fs) -- breaks down well inside
+  # the range of dimensions this function accepts: at N = 300 both the
+  # numerator and the product of marginals underflow to zero and the density
+  # comes back as 0/0 = NaN, even for the identity matrix whose copula density
+  # is exactly 1 everywhere. The logarithm of the same quantity is a modest
+  # number at every dimension, so the ratio must be taken there.
+  # base::log() is qualified throughout: the `log` argument shadows it here.
+  log_num <- -0.5 * N * base::log(2 * pi) -
     0.5 * as.numeric(determinant(Sigma, logarithm = TRUE)$modulus) -
     0.5 * drop((x - mu) %*% pracma::mldivide(A = Sigma, B = (x - mu)))
-  Numerator <- exp(log_num)
 
-  fs <- dnorm(x, mu, s)
-  Denominator <- prod(fs)
+  log_den <- sum(dnorm(x, mu, s, log = TRUE))
 
-  F_U <- Numerator / Denominator
+  log_F_U <- log_num - log_den
 
-  F_U
+  if (log) log_F_U else exp(log_F_U)
 }

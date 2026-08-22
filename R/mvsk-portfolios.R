@@ -2,7 +2,7 @@
 # Higher-moment portfolio tilting.
 #
 # Ported into smqf from the mvskPortfolios package by Dries Cornilly and Kris
-# Boudt (https://github.com/cdries/mvskPortfolios, commit 175bb38), which is
+# Boudt (https://github.com/c3jg/mvskPortfolios, commit 175bb38), which is
 # distributed under GPL-2 | GPL-3. The port keeps the algorithm of Boudt,
 # Cornilly, Van Holle & Willems (2020) unchanged; it exists so that the book's
 # examples run from CRAN alone, without an install_github() step.
@@ -325,7 +325,7 @@
 #' @section Provenance:
 #' This function is a port of \code{mvskPortfolio()} from the
 #' \strong{mvskPortfolios} package by Dries Cornilly and Kris Boudt
-#' (\url{https://github.com/cdries/mvskPortfolios}), redistributed here under
+#' (\url{https://github.com/c3jg/mvskPortfolios}), redistributed here under
 #' the same GPL (\eqn{\ge 2}) licence so that the book's examples install from
 #' CRAN alone. The algorithm is unchanged; the internal calls to non-exported
 #' \pkg{PerformanceAnalytics} symbols have been replaced by the equivalent
