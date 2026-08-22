@@ -91,6 +91,22 @@ f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
       nrow(M4) != d || ncol(M4) != d^3)
     stop("'M4' must be a numeric ", d, " x ", d^3,
          " co-moment matrix.", call. = FALSE)
+  if (any(!is.finite(M1)) || any(!is.finite(M2)) ||
+      any(!is.finite(M3)) || any(!is.finite(M4)))
+    stop("'M1', 'M2', 'M3' and 'M4' must contain only finite values.", call. = FALSE)
+
+  # A budget of one cannot be met if every weight is capped below 1/d.
+  if (d * w_max < 1 - 1e-10)
+    stop(sprintf(paste0("infeasible bounds: with %d assets and w_max = %g the ",
+                        "weights cannot sum to one. Use w_max >= %g."),
+                 d, w_max, 1 / d), call. = FALSE)
+
+  scale_ <- max(1, max(abs(diag(M2))))
+  if (max(abs(M2 - t(M2))) > sqrt(.Machine$double.eps) * scale_)
+    stop("'M2' must be symmetric.", call. = FALSE)
+  if (min(eigen(M2, symmetric = TRUE, only.values = TRUE)$values) <
+      -sqrt(.Machine$double.eps) * scale_)
+    stop("'M2' must be positive semidefinite.", call. = FALSE)
   ## --- end validation ---
 
   d <- length(M1)
@@ -132,9 +148,16 @@ f_ptf_max_U <- function(gamma, w_max, M1, M2, M3, M4) {
                                     print_level = 0,
                                     check_derivatives = FALSE))
 
-  if (sol$status < 0)
+  # NLopt returns a positive code on success, but 5 and 6 mean the evaluation
+  # or time budget ran out before convergence -- not the same thing.
+  if (sol$status < 0) {
     warning("nloptr did not converge (status ", sol$status, "): ",
             sol$message, call. = FALSE)
+  } else if (sol$status %in% c(5L, 6L)) {
+    warning("nloptr hit its evaluation or time budget (status ", sol$status,
+            "): ", sol$message, ". The reported solution may not be optimal.",
+            call. = FALSE)
+  }
 
   wopt <- sol$solution
   EU   <- -sol$objective

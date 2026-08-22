@@ -16,9 +16,31 @@
 #' }
 #'
 #' @details
-#' The time index is a weekly \code{Date}. Divide by 100 to convert to decimal
-#' returns before use in calculations. To work at monthly frequency, downsample
-#' with, for example, \code{FamaFrench[xts::endpoints(FamaFrench, "months"), ]}.
+#' The time index is a weekly \code{Date}, stamped at the \strong{end} of each
+#' week. In the modern sample that is a Friday, shifted back to the Thursday
+#' when the Friday is a holiday (3,535 Fridays and 137 Thursdays in total). In
+#' the early history, when Saturday trading sessions were still held, the stamp
+#' is a Saturday: 1,158 observations, running to the late 1950s. Do not assume a
+#' Friday stamp throughout. Divide by 100 to convert to decimal returns.
+#'
+#' Note also that \code{rf} is slightly negative in 60 Depression-era weeks
+#' (1933 and 1938), with a minimum of -0.016\%. That is a property of the source
+#' data, not an error.
+#'
+#' @section Aligning with other weekly series:
+#' Weekly price series downloaded from vendors are often stamped at the
+#' \emph{start} of the week instead, so the two indices interleave rather than
+#' coincide — see \code{\link{extdata}} for the prices used in Chapter 1, which
+#' carry Tuesday stamps. Merging such a series with these factors and then
+#' filling the gaps, for instance with two \code{zoo::na.locf()} passes, silently
+#' lags the factors by one week and can flip the sign of an estimated market
+#' beta. Pair the two series by position over a common span, or restamp one onto
+#' the other's convention, and assert that the lengths match before regressing.
+#'
+#' Downsampling with \code{FamaFrench[xts::endpoints(FamaFrench, "months"), ]}
+#' selects the \emph{last weekly observation} of each month; it does not
+#' compound the weeks into a monthly return. To obtain monthly factor returns,
+#' aggregate the weekly ones explicitly.
 #'
 #' @source
 #' Kenneth R. French Data Library,

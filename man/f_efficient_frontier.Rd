@@ -4,33 +4,52 @@
 \alias{f_efficient_frontier}
 \title{Compute a Long-Only Mean–Variance Efficient Frontier}
 \usage{
-f_efficient_frontier(mu, Sigma, n_ptf)
+f_efficient_frontier(mu, Sigma, n_ptf, targets = NULL)
 }
 \arguments{
 \item{mu}{Numeric vector of length \eqn{N}: expected asset returns.}
 
-\item{Sigma}{Numeric \eqn{N \times N} covariance matrix. Only the symmetric
-part is used internally.}
+\item{Sigma}{Numeric \eqn{N \times N} covariance matrix. Objects that are
+not base matrices (for instance the \code{dpoMatrix} returned by
+\code{Matrix::nearPD()$mat}) are coerced with \code{as.matrix()}. Only the
+symmetric part is used internally.}
 
 \item{n_ptf}{Integer \eqn{\ge 2}: number of portfolios along the frontier
 (including the minimum-variance and maximum-return portfolios).}
+
+\item{targets}{Optional numeric vector of target returns, sorted increasingly.
+When supplied, the frontier is solved at exactly these targets instead of
+the default grid, and \code{n_ptf} must be omitted or equal to
+\code{length(targets)}. This is what makes several frontiers comparable:
+frontiers computed on different inputs otherwise use different grids, and
+averaging them point by point mixes portfolios that target different
+returns. Targets above the maximum attainable return are reported with
+status \code{"failed"} rather than silently clipped.}
 }
 \value{
 A list with components:
 \describe{
-  \item{weights}{Numeric matrix \eqn{N \times n_ptf}: portfolio weights.}
-  \item{volatility}{Numeric length-\eqn{n_ptf}: portfolio standard deviations.}
-  \item{expected_returns}{Numeric length-\eqn{n_ptf}: portfolio expected returns.}
+  \item{weights}{Numeric matrix \eqn{N \times n_ptf}: portfolio weights.
+    Rows are named after \code{mu} when it carries names; columns are
+    labelled \code{ptf1}, \code{ptf2}, ... Columns of failed solves are
+    \code{NA}.}
+  \item{volatility}{Named numeric of length \eqn{n_ptf}: portfolio standard
+    deviations, \code{NA} where the solve failed.}
+  \item{expected_returns}{Named numeric of length \eqn{n_ptf}: portfolio
+    expected returns, \code{NA} where the solve failed.}
   \item{frontier}{Data frame with columns \code{point} (integer index),
-    \code{expected_return}, and \code{volatility} for each frontier portfolio.}
+    \code{expected_return}, \code{volatility}, \code{target} and
+    \code{status} for each frontier portfolio.}
   \item{targets}{Numeric vector of length \eqn{n_ptf}: the target-return grid
     used to trace the frontier.}
+  \item{status}{Character vector of length \eqn{n_ptf}: \code{"ok"} for a
+    solved point, \code{"failed"} otherwise.}
 }
 }
 \description{
 Solves a sequence of quadratic programs to trace the long-only,
 fully-invested Markowitz efficient frontier between the minimum-variance
-portfolio and the maximum-return (corner) portfolio.
+portfolio and the maximum-return portfolio.
 }
 \details{
 Portfolios are obtained by minimizing variance for a grid of target returns
@@ -42,14 +61,27 @@ Each QP solves
   \min_{w}\; w^\top \Sigma\, w \quad
   \text{s.t. } \mathbf{1}^\top w = 1,\; w \ge 0
 }
-and, for interior points on the frontier, additionally
+and, for every point beyond the minimum-variance portfolio, additionally
 \deqn{\mu^\top w = \mu^\star,}
 where \eqn{\mu^\star} spans a linear grid between the min-variance portfolio
-return and the single-asset maximum-return portfolio.
+return and \eqn{\max(\mu)}.
 
-Requires \pkg{pracma} for \code{quadprog}. Numerical issues can arise if
-\code{Sigma} is not positive semidefinite or if target returns are infeasible
-under the long-only constraint.
+The maximum-return end point is obtained from the same constrained QP rather
+than by assigning weights by hand. This matters when several assets tie for
+\code{max(mu)}: spreading weight equally across them is feasible but
+generally not variance-minimal, so the resulting portfolio can be strictly
+dominated and would not lie on the frontier.
+
+\code{Sigma} is checked for symmetry and positive semidefiniteness. A matrix
+whose smallest eigenvalue falls clearly below zero is rejected rather than
+silently repaired; project it first, for example with
+\code{as.matrix(Matrix::nearPD(Sigma)$mat)}.
+
+If a QP fails to converge, the corresponding point is returned as \code{NA}
+with \code{status == "failed"} and a warning, instead of being filled with a
+neighbouring solution that does not meet its target return.
+
+Requires \pkg{pracma} for \code{quadprog}.
 }
 \examples{
 set.seed(1)
@@ -60,6 +92,23 @@ ef <- f_efficient_frontier(mu, Sigma, n_ptf = 20)
 # Inspect end points
 ef$expected_returns[c(1, 20)]
 ef$volatility[c(1, 20)]
+all(ef$status == "ok")
+
+# Ties for the maximum expected return are resolved by minimizing variance,
+# not by equal weighting: assets 2 and 3 both reach 0.2, and the variance-
+# minimal mix is c(0, 1/101, 100/101) with variance 100/101, well below the
+# 25.25 of an equal split and below the 1 of asset 3 on its own.
+ef_tie <- f_efficient_frontier(mu = c(0.1, 0.2, 0.2),
+                               Sigma = diag(c(1, 100, 1)), n_ptf = 5)
+ef_tie$weights[, 5]
+
+# A common target grid makes two frontiers comparable point by point
+mu2 <- mu + c(0.01, -0.01, 0.00, 0.02)
+grid <- seq(0.095, 0.105, length.out = 5)
+e1 <- f_efficient_frontier(mu,  Sigma, targets = grid)
+e2 <- f_efficient_frontier(mu2, Sigma, targets = grid)
+# Same targets, so the two weight vectors at point 3 are directly comparable
+cbind(e1$weights[, 3], e2$weights[, 3])
 
 }
 \references{

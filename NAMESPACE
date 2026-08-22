@@ -5,6 +5,8 @@ export(f_display_copula)
 export(f_efficient_frontier)
 export(f_gumbel_copula_2d_cdf)
 export(f_gumbel_copula_2d_pdf)
+export(f_mdp)
+export(f_mvsk_portfolio)
 export(f_normal_copula_pdf)
 export(f_portfolio_moments)
 export(f_ptf_max_U)
@@ -12,12 +14,16 @@ export(f_student_copula_pdf)
 export(f_tail_dependence)
 importFrom(graphics,persp)
 importFrom(nloptr,nloptr)
-importFrom(pracma,mldivide)
-importFrom(pracma,quadprog)
-importFrom(stats,cor)
-importFrom(stats,dnorm)
-importFrom(stats,dt)
-importFrom(stats,qnorm)
-importFrom(stats,qt)
-importFrom(stats,quantile)
+importFrom(pracma,
+  mldivide,
+  quadprog
+)
+importFrom(stats,
+  cor,
+  dnorm,
+  dt,
+  qnorm,
+  qt,
+  quantile
+)
 importFrom(xts,as.xts)

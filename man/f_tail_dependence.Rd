@@ -50,7 +50,14 @@ each margin and computes:
   \item the sample correlation between the values of \code{x} and \code{y}
     for which both lie in their respective tails (\code{excorr}).
 }
-If no joint tail events are found, \code{lambda = 0} and
+If the threshold selects no observation of \code{x} at all — which happens
+when \code{x} is constant or heavily tied — both components are \code{NA}
+and a warning is issued: an empty tail carries no information about tail
+dependence, and reporting zero there would describe a perfect match as
+independence.
+
+If joint tail events are absent while the marginal tail is not empty,
+\code{lambda = 0} and
 \code{excorr = NA}. If fewer than two joint-tail observations are available,
 \code{excorr} is also \code{NA} (the sample correlation is undefined).
 When the joint-tail subset is degenerate (e.g., \code{x} and \code{y} are

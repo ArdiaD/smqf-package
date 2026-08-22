@@ -1,0 +1,77 @@
+#' Raw Data Files Shipped with the Book's Import Examples
+#'
+#' Chapter 1 of the book opens by reading a plain file from disk, so that
+#' readers practise importing data before they meet packaged datasets. Those
+#' files are installed with \pkg{smqf} under \code{extdata} and can be located
+#' with \code{\link[base]{system.file}}.
+#'
+#' Copy them into a \code{data/} folder of your own project to follow the
+#' chapter exactly:
+#'
+#' \preformatted{
+#' dir.create("data", showWarnings = FALSE)
+#' file.copy(dir(system.file("extdata", package = "smqf"), full.names = TRUE),
+#'           "data", overwrite = FALSE)
+#' }
+#'
+#' @section Files:
+#' \describe{
+#'   \item{\code{stocks.txt}}{Whitespace-delimited, header row, 574 weekly
+#'     observations from 2008-01-01 to 2018-12-25. Columns \code{Date},
+#'     \code{AAPL}, \code{AXP}, \code{BA}, \code{CAT}, \code{CSCO}: split- and
+#'     dividend-adjusted close prices in USD for five constituents of the Dow
+#'     Jones Industrial Average. Read with
+#'     \code{read.table(f, header = TRUE)}.}
+#'   \item{\code{stocks.csv}}{The same 574 x 6 table, comma-separated. Read with
+#'     \code{read.csv()} or \code{readr::read_csv()}.}
+#'   \item{\code{stocks.xlsx}}{The same table as an Excel workbook, for the
+#'     \code{readxl::read_excel()} example.}
+#'   \item{\code{prices.txt}}{Whitespace-delimited, 6,109 daily observations
+#'     from 1990-02-01 to 2013-07-02, no missing values. Columns \code{Date},
+#'     \code{S&P 500}, \code{FTSE 100}, \code{CAC 40}, \code{DAX 30}: index
+#'     levels in local currency. Not used in Chapter 1; supplied for
+#'     open-ended exercises. Note the non-syntactic column names — read with
+#'     \code{check.names = FALSE} to preserve them.}
+#' }
+#'
+#' @section Weekly timestamp convention:
+#' The dates in \code{stocks.txt}, \code{stocks.csv} and \code{stocks.xlsx} are
+#' all Tuesdays, spaced exactly seven days apart, because the series was
+#' downloaded at weekly periodicity starting on 2008-01-01 (a Tuesday). The
+#' timestamp labels the week, \strong{not} the day the price was observed: the
+#' price recorded against a Tuesday is the closing price at the end of that
+#' calendar week.
+#'
+#' This matters whenever the series is combined with weekly data that is
+#' stamped at the end of the week, as the Fama–French factors in
+#' \code{\link{FamaFrench}} are (Fridays). The return computed for Tuesday
+#' \eqn{t} spans the week ending on the \strong{Friday of that same calendar
+#' week}, so the two series pair one-to-one in order:
+#'
+#' \preformatted{
+#' returns   2017-01-03  2017-01-10  2017-01-17   (Tuesday stamps)
+#' factors   2017-01-06  2017-01-13  2017-01-20   (Friday stamps)
+#'           |___________|___________|__________|  same weeks, paired in order
+#' }
+#'
+#' Do \strong{not} align them by carrying observations forward across a merged
+#' union index (for instance with two \code{zoo::na.locf()} passes): because
+#' the two stamps interleave, every Tuesday would inherit the \emph{preceding}
+#' Friday's factors and the whole factor series would lag the returns by one
+#' week. Match by position, or restamp one series onto the other's convention,
+#' and assert that the two lengths agree before regressing.
+#'
+#' @examples
+#' f <- system.file("extdata", "stocks.txt", package = "smqf")
+#' stocks <- read.table(f, header = TRUE)
+#' dim(stocks)
+#' head(stocks, 3)
+#' unique(weekdays(as.Date(stocks$Date)))   # all Tuesdays
+#'
+#' @seealso \code{\link{FamaFrench}} for the weekly factors these prices are
+#'   regressed on in Chapter 1.
+#'
+#' @name extdata
+#' @docType data
+#' @keywords datasets
+NULL

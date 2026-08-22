@@ -1,6 +1,6 @@
 Package: smqf
 Title: Statistical Methods for Quantitative Finance
-Version: 1.1-3
+Version: 1.1-6
 Authors@R: c(
     person("David", "Ardia", role = c("aut", "cre"),
            email = "david.ardia.ch@gmail.com",
@@ -10,7 +10,11 @@ Authors@R: c(
     person("Kurt", "Hornik", role = c("ctb", "cph"),
            comment = "Original author of qrmdata, from which 15 market datasets were ported under GPL-2 | GPL-3"),
     person("Alexander J.","McNeil", role = c("ctb", "cph"),
-           comment = "Original author of qrmdata, from which 15 market datasets were ported under GPL-2 | GPL-3"))
+           comment = "Original author of qrmdata, from which 15 market datasets were ported under GPL-2 | GPL-3"),
+    person("Dries", "Cornilly", role = c("ctb", "cph"),
+           comment = "Original author of mvskPortfolios, from which f_mvsk_portfolio() was ported under GPL-2 | GPL-3"),
+    person("Kris", "Boudt", role = c("ctb", "cph"),
+           comment = "Original author of mvskPortfolios, from which f_mvsk_portfolio() was ported under GPL-2 | GPL-3"))
 Description: Provides data and functions used in the book "Statistical Methods for Quantitative Finance"
              by David Ardia (2026).
 License: GPL-3
@@ -24,11 +28,15 @@ Suggests:
     zoo,
     testthat (>= 3.0.0),
     PerformanceAnalytics,
-    glmnet
+    glmnet,
+    quadprog,
+    copula,
+    Matrix,
+    readxl
 Config/testthat/edition: 3
 Imports:
     graphics,
     stats,
     nloptr,
     pracma
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

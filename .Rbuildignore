@@ -3,3 +3,4 @@
 ^smqf-package\.Rproj$
 ^\.github$
 ^dist$
+^data-raw$
