@@ -11,7 +11,13 @@
 #'
 #' @param u Numeric vector of length 2, containing values in the interval
 #'   \eqn{(0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.
+#' @param log Logical: return the log-density instead of the density.
+#'   The Clayton density diverges towards the lower corner, where only the log
+#'   scale is representable. Default \code{FALSE}.
 #' @param theta Numeric scalar giving the dependence parameter
+#' @param log Logical: return the log-density instead of the density. The
+#'   Clayton density diverges towards the lower corner, where only the log
+#'   scale is representable. Default \code{FALSE}.
 #'   (\eqn{\theta \ge 0}). The value \eqn{\theta = 0} is the independence limit.
 #'
 #' @return A numeric value corresponding to the Clayton copula PDF evaluated
@@ -40,7 +46,7 @@
 #' @seealso \code{\link{f_gumbel_copula_2d_pdf}}, \code{\link{f_normal_copula_pdf}},
 #'   \code{\link{f_student_copula_pdf}}
 #' @export
-f_clayton_copula_2d_pdf <- function(u, theta) {
+f_clayton_copula_2d_pdf <- function(u, theta, log = FALSE) {
   # Validate inputs
   if (!is.numeric(u) || length(u) != 2L || any(!is.finite(u))) {
     stop("'u' must be a numeric vector of length 2 with finite values.", call. = FALSE)
@@ -56,7 +62,7 @@ f_clayton_copula_2d_pdf <- function(u, theta) {
   }
 
   # Independence limit: theta -> 0 => density = 1
-  if (theta <= 1e-10) return(1.0)
+  if (theta <= 1e-10) return(if (log) 0.0 else 1.0)
 
   u1 <- u[1]; u2 <- u[2]
 
@@ -76,19 +82,27 @@ f_clayton_copula_2d_pdf <- function(u, theta) {
 
   # Guard against numerical negativity due to rounding
   if (inner <= 0) {
-    # If this triggers, inputs are at machine extremes; return ~0 density
-    return(0.0)
+    # Inputs at machine extremes; the density has effectively no mass here
+    return(if (log) -Inf else 0.0)
   }
 
   log_s <- m + log(inner)
 
   log_c <- log1p(theta) - (1 + theta) * (lu1 + lu2) + (-2 - 1 / theta) * log_s
 
-  # Convert back to density
-  c_val <- exp(log_c)
+  # The density diverges towards the lower corner, where the log scale is the
+  # only representable one. Return log c on request rather than an overflow.
+  if (log) {
+    return(log_c)
+  }
 
-  # Finite guard (just in case)
-  if (!is.finite(c_val)) c_val <- 0.0
+  c_val <- exp(log_c)
+  if (!is.finite(c_val)) {
+    warning("the Clayton density overflows at u = (", signif(u1, 3), ", ",
+            signif(u2, 3), ") with theta = ", theta,
+            "; use log = TRUE to work on the log scale.", call. = FALSE)
+    c_val <- Inf
+  }
 
   c_val
 }

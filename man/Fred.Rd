@@ -8,13 +8,24 @@
 An \code{xts} object with 60 monthly observations (index Jan 2015
 to Dec 2019, class \code{zoo::yearmon}) and 129 columns:
 \describe{
-  \item{columns 1 to 128}{Standardised FRED-MD macro variables, transformed
-    (differenced or log-differenced) to achieve stationarity following the
-    FRED-MD transformation codes. Column names are FRED-MD series codes
-    (e.g., \code{"INDPRO"}, \code{"CPIAUCSL"}, \code{"GS10"}).}
-  \item{\code{DJI.Adjusted} (final column)}{One-month-ahead Dow Jones
-    Industrial Average log-returns, aligned so that row \eqn{t} of the
-    predictors corresponds to row \eqn{t} of the response.}
+  \item{columns 1 to 128}{FRED-MD macro variables, transformed (differenced
+    or log-differenced) to achieve stationarity following the FRED-MD
+    transformation codes. Column names are FRED-MD series codes
+    (e.g., \code{"INDPRO"}, \code{"CPIAUCSL"}, \code{"GS10"}). The series
+    are \strong{not} rescaled: each keeps the units of its own transform,
+    and the column standard deviations span roughly eight orders of
+    magnitude, from \code{CONSPI} (about 0.0009) to \code{BOGMBASE} (about
+    73,000). Any penalized fit must therefore standardize — which
+    \code{glmnet::glmnet()} does by default, but only while
+    \code{standardize = TRUE}.}
+  \item{\code{DJI.Adjusted} (final column)}{One-month-ahead change in the
+    Dow Jones Industrial Average, aligned so that row \eqn{t} of the
+    predictors corresponds to row \eqn{t} of the response. \strong{This is a
+    difference in index points, not a return}: it ranges from about
+    \eqn{-2211} to \eqn{+1785} with a standard deviation near 780. Because
+    the index level roughly doubles over the sample, the series is
+    heteroskedastic by construction. Divide by the lagged index level before
+    interpreting any result as a return.}
 }
 }
 \source{

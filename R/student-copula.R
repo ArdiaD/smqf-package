@@ -71,6 +71,21 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
     stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
   if (!is.numeric(nu) || length(nu) != 1L || !is.finite(nu) || nu <= 0)
     stop("'nu' must be a positive numeric scalar.", call. = FALSE)
+
+  ## Sigma must be a genuine covariance matrix: symmetric and positive
+  ## definite. Without this check an asymmetric matrix is silently accepted
+  ## and returns a plausible number that corresponds to no valid copula, a
+  ## singular one returns Inf, and an indefinite one returns NaN.
+  scale_ <- max(1, max(abs(diag(Sigma))))
+  if (max(abs(Sigma - t(Sigma))) > sqrt(.Machine$double.eps) * scale_)
+    stop("'Sigma' must be symmetric.", call. = FALSE)
+  if (any(diag(Sigma) <= 0))
+    stop("'Sigma' must have strictly positive diagonal entries.", call. = FALSE)
+  min_eig <- min(eigen(Sigma, symmetric = TRUE, only.values = TRUE)$values)
+  if (min_eig <= sqrt(.Machine$double.eps) * scale_)
+    stop(sprintf(paste0("'Sigma' must be positive definite (smallest eigenvalue %g). ",
+                        "Project it first, e.g. as.matrix(Matrix::nearPD(Sigma)$mat)."),
+                 min_eig), call. = FALSE)
   ## --- end validation ---
 
   s <- sqrt(diag(Sigma))
@@ -80,9 +95,13 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
   z2 <- drop((x - mu) %*% pracma::mldivide(Sigma, (x - mu)))
   ## Gamma ratio computed in log space: gamma((nu + N)/2) / gamma(nu/2)
   ## overflows to Inf/Inf = NaN for nu >~ 344 if computed directly.
-  K  <- exp(lgamma((nu + N) / 2) - lgamma(nu / 2)) *
-    (nu * pi)^(-N / 2) * ((det(Sigma))^(-0.5))
-  Numerator <- K * (1 + z2 / nu)^(-(nu + N) / 2)
+  # Everything through the log: the Gamma ratio overflows for nu above ~344
+  # and det(Sigma) underflows for large N.
+  log_num <- lgamma((nu + N) / 2) - lgamma(nu / 2) -
+    0.5 * N * log(nu * pi) -
+    0.5 * as.numeric(determinant(Sigma, logarithm = TRUE)$modulus) -
+    0.5 * (nu + N) * log1p(z2 / nu)
+  Numerator <- exp(log_num)
 
   fs <- dt((x - mu) / s, nu) / s
   Denominator <- prod(fs)

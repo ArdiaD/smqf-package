@@ -7,9 +7,8 @@
 \format{
 An \code{xts} object with 13595 daily observations and 30
 columns, one per constituent (e.g., \code{AAPL}, \code{IBM},
-\code{JPM}, \code{XOM}). Missing values appear before the first date
-at which a given constituent was available. The time index spans
-from 1962-01-02 to 2015-12-31.
+\code{JPM}, \code{XOM}). The time index spans from 1962-01-02 to
+2015-12-31.
 }
 \source{
 Yahoo Finance, downloaded on 2016-01-03 via \code{qrmtools::get_data()}.
@@ -28,6 +27,21 @@ the book's examples remain reproducible without an extra dependency. The
 data is redistributed here under the same GPL (\eqn{\ge 2}) license as
 \strong{qrmdata}.
 }
+\section{Missing values}{
+
+The vast majority of the 101,285 \code{NA}s are leading: a constituent is
+\code{NA} on every date before it first traded. A small number, however,
+occur \emph{after} a series has started, so trimming the leading block does
+not guarantee a complete matrix. In this dataset there are 25 such interior
+\code{NA}s, confined to three dates (1985-09-27, when the NYSE was closed;
+1981-08-10; and 1983-09-23) and spread over 24 of the 30 columns.
+
+Handle both cases explicitly, for example with
+\code{stats::cor(x, use = "pairwise.complete.obs")}, or by restricting to
+rows with \code{rowSums(is.na(x)) == 0}. See \code{EURSTX_const}, where
+interior \code{NA}s are far more common.
+}
+
 \examples{
 data("DJ_const")
 class(DJ_const)        # "xts" "zoo"

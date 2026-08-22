@@ -69,15 +69,33 @@ f_normal_copula_pdf <- function(u, mu, Sigma) {
   if (!is.numeric(Sigma) || !is.matrix(Sigma) ||
       nrow(Sigma) != N || ncol(Sigma) != N || any(!is.finite(Sigma)))
     stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
+
+  ## Sigma must be a genuine covariance matrix: symmetric and positive
+  ## definite. Without this check an asymmetric matrix is silently accepted
+  ## and returns a plausible number that corresponds to no valid copula, a
+  ## singular one returns Inf, and an indefinite one returns NaN.
+  scale_ <- max(1, max(abs(diag(Sigma))))
+  if (max(abs(Sigma - t(Sigma))) > sqrt(.Machine$double.eps) * scale_)
+    stop("'Sigma' must be symmetric.", call. = FALSE)
+  if (any(diag(Sigma) <= 0))
+    stop("'Sigma' must have strictly positive diagonal entries.", call. = FALSE)
+  min_eig <- min(eigen(Sigma, symmetric = TRUE, only.values = TRUE)$values)
+  if (min_eig <= sqrt(.Machine$double.eps) * scale_)
+    stop(sprintf(paste0("'Sigma' must be positive definite (smallest eigenvalue %g). ",
+                        "Project it first, e.g. as.matrix(Matrix::nearPD(Sigma)$mat)."),
+                 min_eig), call. = FALSE)
   ## --- end validation ---
 
   s <- sqrt(diag(Sigma))
 
   x <- qnorm(p = u, mean = mu, sd = s)
 
-  Numerator <- (2 * pi)^(-N / 2) *
-    (det(Sigma))^(-0.5) *
-    exp(-0.5 * drop((x - mu) %*% pracma::mldivide(A = Sigma, B = (x - mu))))
+  # Work through the log: det(Sigma) underflows to zero for large N -- it is
+  # already 9e-30 at N = 200 -- which would turn the density into Inf.
+  log_num <- -0.5 * N * log(2 * pi) -
+    0.5 * as.numeric(determinant(Sigma, logarithm = TRUE)$modulus) -
+    0.5 * drop((x - mu) %*% pracma::mldivide(A = Sigma, B = (x - mu)))
+  Numerator <- exp(log_num)
 
   fs <- dnorm(x, mu, s)
   Denominator <- prod(fs)

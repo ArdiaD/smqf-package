@@ -38,7 +38,14 @@
 #'   \item the sample correlation between the values of \code{x} and \code{y}
 #'     for which both lie in their respective tails (\code{excorr}).
 #' }
-#' If no joint tail events are found, \code{lambda = 0} and
+#' If the threshold selects no observation of \code{x} at all — which happens
+#' when \code{x} is constant or heavily tied — both components are \code{NA}
+#' and a warning is issued: an empty tail carries no information about tail
+#' dependence, and reporting zero there would describe a perfect match as
+#' independence.
+#'
+#' If joint tail events are absent while the marginal tail is not empty,
+#' \code{lambda = 0} and
 #' \code{excorr = NA}. If fewer than two joint-tail observations are available,
 #' \code{excorr} is also \code{NA} (the sample correlation is undefined).
 #' When the joint-tail subset is degenerate (e.g., \code{x} and \code{y} are
@@ -89,7 +96,17 @@ f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
   sumx  <- sum(idx_x & idx_y)
   nx    <- sum(idx_x)
 
-  lambda <- if (nx > 0) sumx / nx else 0
+  # An empty tail is not the same thing as no tail dependence: it means the
+  # threshold selected nothing, typically because the series is constant or
+  # heavily tied. Returning 0 there would report a perfect match as
+  # independence.
+  if (nx == 0) {
+    warning("the ", side, " threshold at alpha = ", alpha,
+            " selects no observation of 'x'; returning NA. This usually means ",
+            "'x' is constant or heavily tied.", call. = FALSE)
+    return(list(lambda = NA_real_, excorr = NA_real_))
+  }
+  lambda <- sumx / nx
   if (sumx >= 2) {
     excorr <- stats::cor(x[idx_x & idx_y], y[idx_x & idx_y])
   } else {

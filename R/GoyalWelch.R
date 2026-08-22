@@ -11,32 +11,66 @@
 #'   \item{D12}{Trailing 12-month cash dividends on the index (level).}
 #'   \item{E12}{Trailing 12-month earnings on the index (level).}
 #'   \item{b/m}{Aggregate book-to-market ratio.}
-#'   \item{tbl}{3-month Treasury bill rate (monthly).}
-#'   \item{AAA}{Moody’s AAA corporate bond yield.}
-#'   \item{BAA}{Moody’s BAA corporate bond yield.}
-#'   \item{lty}{Long-term government bond yield.}
+#'   \item{tbl}{3-month Treasury bill rate, \emph{annualized}, as a decimal
+#'              (0.1204 = 12.04\% per year). Observed monthly.}
+#'   \item{AAA}{Moody’s AAA corporate bond yield, annualized decimal.}
+#'   \item{BAA}{Moody’s BAA corporate bond yield, annualized decimal.}
+#'   \item{lty}{Long-term government bond yield, annualized decimal.}
 #'   \item{ntis}{Net equity expansion: shares issued less repurchases scaled by
 #'               total equity (a supply measure).}
-#'   \item{Rfree}{Risk-free rate (monthly).}
+#'   \item{Rfree}{Risk-free rate over the month, as a decimal. \strong{This is
+#'                exactly \code{tbl / 12}} — see the warning under Details.}
 #'   \item{infl}{Inflation (monthly change in price level).}
-#'   \item{ltr}{Long-term government bond total return (monthly).}
-#'   \item{corpr}{Corporate bond total return (monthly).}
-#'   \item{svar}{Stock market variance proxy (e.g., rolling sum of daily
-#'               squared returns).}
-#'   \item{csp}{Corporate bond \emph{return} spread: \code{corpr - ltr}.}
+#'   \item{ltr}{Long-term government bond total return over the month.}
+#'   \item{corpr}{Corporate bond total return over the month.}
+#'   \item{svar}{Stock market variance proxy (rolling sum of daily squared
+#'               returns).}
+#'   \item{csp}{Cross-sectional premium of Polk, Thompson and Vuolteenaho
+#'              (2006). Available from Dec 1979 to Dec 2002 only; the remaining
+#'              192 months are \code{NA}. It is \emph{not} the corporate bond
+#'              return spread, which is \code{corpr - ltr}.}
 #' }
+#'
+#' @section Exact redundancy between tbl and Rfree:
+#' \code{Rfree} equals \code{tbl / 12} to the last representable digit for every
+#' one of the 469 months: \code{max(abs(GoyalWelch[,"tbl"]/12 -
+#' GoyalWelch[,"Rfree"]))} is exactly zero. The two columns therefore carry the
+#' same information, and \strong{at most one of them may enter a regression}.
+#' Passing both produces a rank-deficient design: \code{lm()} detects it and
+#' returns \code{NA} for the aliased coefficient, but penalized fitters such as
+#' \code{glmnet::glmnet()} do not — they split the effect arbitrarily between
+#' the two columns and report coefficients that can differ in sign from the
+#' identified solution. In predictive regressions \code{Rfree} normally belongs
+#' on the left-hand side, subtracted from the return to form the excess return.
+#'
+#' @section Missing values:
+#' \code{csp} is missing for 192 of the 469 months (Jan 2003 onward). Every
+#' other column is complete. Selecting predictors positionally, for instance
+#' \code{GoyalWelch[, 2:14]}, silently excludes \code{csp}; select by name
+#' instead so the exclusion is deliberate and visible.
 #'
 #' @details
 #' This object mirrors the variables used in
 #' Goyal & Welch (2008) and subsequent updates. From these levels you can form
 #' the standard ratios used in the literature, for example
 #' \code{dp = log(D12/Index)}, \code{ep = log(E12/Index)},
-#' \code{dfy = BAA - AAA}, and \code{tms = lty - tbl}.
+#' \code{dfy = BAA - AAA}, \code{dfr = corpr - ltr} and \code{tms = lty - tbl}.
+#'
+#' Beware that the classical predictor list contains further exact
+#' redundancies of the same kind as \code{tbl}/\code{Rfree}: the payout ratio
+#' \code{de = dp - ep} and the term spread \code{tms = lty - tbl} are
+#' differences of other members. These predictors are used one at a time in
+#' univariate predictive regressions; entering them jointly with their
+#' components yields a singular design matrix.
+#'
+#' \code{Index} is a price \emph{level}, not a return. The equity premium is
+#' formed as \code{(Index[t] + D12[t]/12) / Index[t-1] - 1 - Rfree[t]}.
 #'
 #' @source
 #' Compiled from the public Goyal–Welch data library (predictable stock returns)
-#' and standard fixed-income sources (e.g., FRED). If you distribute this data,
-#' include a \code{data-raw/} script that reproduces the object from originals.
+#' and standard fixed-income sources (e.g., FRED). See
+#' \code{data-raw/GoyalWelch.R} for the contract harness that pins the
+#' structural properties documented above.
 #'
 #' @references
 #' Goyal, A., & Welch, I. (2008). A Comprehensive Look at The Empirical
@@ -48,10 +82,20 @@
 #' class(GoyalWelch)         # "xts" "zoo"
 #' head(GoyalWelch)
 #'
+#' # Rfree is exactly tbl / 12: never use both as predictors
+#' max(abs(GoyalWelch[,"tbl"] / 12 - GoyalWelch[,"Rfree"]))
+#'
+#' # The response: total return on the index, in excess of the risk-free rate
+#' ix  <- GoyalWelch[,"Index"]
+#' erp <- (ix + GoyalWelch[,"D12"] / 12) / xts::lag.xts(ix, 1) - 1 -
+#'   GoyalWelch[,"Rfree"]
+#' head(erp, 3)
+#'
 #' # Construct common predictors:
 #' dp  <- log(GoyalWelch[,"D12"]  / GoyalWelch[,"Index"])  # dividend–price
 #' ep  <- log(GoyalWelch[,"E12"]  / GoyalWelch[,"Index"])  # earnings–price
 #' dfy <- GoyalWelch[,"BAA"] - GoyalWelch[,"AAA"]          # default yield spread
+#' dfr <- GoyalWelch[,"corpr"] - GoyalWelch[,"ltr"]        # default return spread
 #' tms <- GoyalWelch[,"lty"] - GoyalWelch[,"tbl"]          # term spread
 #'
 #' @usage data("GoyalWelch")

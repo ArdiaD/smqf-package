@@ -43,10 +43,18 @@ f_display_copula <- function(my_copula, grid_1, grid_2, plot = TRUE,
   ## --- input validation ---
   if (!is.function(my_copula))
     stop("'my_copula' must be a function.", call. = FALSE)
-  if (!is.numeric(grid_1) || length(grid_1) == 0L)
-    stop("'grid_1' must be a non-empty numeric vector.", call. = FALSE)
-  if (!is.numeric(grid_2) || length(grid_2) == 0L)
-    stop("'grid_2' must be a non-empty numeric vector.", call. = FALSE)
+  if (!is.numeric(grid_1) || length(grid_1) == 0L || any(!is.finite(grid_1)))
+    stop("'grid_1' must be a non-empty finite numeric vector.", call. = FALSE)
+  if (!is.numeric(grid_2) || length(grid_2) == 0L || any(!is.finite(grid_2)))
+    stop("'grid_2' must be a non-empty finite numeric vector.", call. = FALSE)
+  # The copula densities in this package live on the open square: the
+  # Archimedean ones diverge at the corners and the elliptical ones need a
+  # finite normal or Student quantile. A grid reaching 0 or 1 fails inside
+  # my_copula(), with a message that points at the wrong place.
+  if (min(grid_1) <= 0 || max(grid_1) >= 1 || min(grid_2) <= 0 || max(grid_2) >= 1)
+    stop("'grid_1' and 'grid_2' must lie strictly inside (0, 1): the densities ",
+         "are not defined on the boundary. Use seq(0.01, 0.99, ...) or similar.",
+         call. = FALSE)
   if (!is.logical(plot) || length(plot) != 1L || is.na(plot))
     stop("'plot' must be a single logical value (TRUE or FALSE).", call. = FALSE)
   if (!is.character(zlab) || length(zlab) != 1L || is.na(zlab))

@@ -4,13 +4,17 @@
 \alias{f_clayton_copula_2d_pdf}
 \title{Clayton Copula PDF (2-Dimensional)}
 \usage{
-f_clayton_copula_2d_pdf(u, theta)
+f_clayton_copula_2d_pdf(u, theta, log = FALSE)
 }
 \arguments{
 \item{u}{Numeric vector of length 2, containing values in the interval
 \eqn{(0, 1]} representing the evaluation point \eqn{(u_1, u_2)}.}
 
-\item{theta}{Numeric scalar giving the dependence parameter
+\item{theta}{Numeric scalar giving the dependence parameter}
+
+\item{log}{Logical: return the log-density instead of the density. The
+Clayton density diverges towards the lower corner, where only the log
+scale is representable. Default \code{FALSE}.
 (\eqn{\theta \ge 0}). The value \eqn{\theta = 0} is the independence limit.}
 }
 \value{
