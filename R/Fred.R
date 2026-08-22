@@ -1,9 +1,13 @@
-#' FRED-MD Macro Factors and Dow Jones Returns (Monthly, 2015–2019)
+#' FRED-MD Macro Factors and Dow Jones Index Changes (Monthly, 2015–2019)
 #'
 #' An \code{xts} object holding 128 FRED-MD macroeconomic predictors and the
-#' monthly Dow Jones Industrial Average log-returns, aligned over the period
-#' 2015-01 to 2019-12. Used to illustrate high-dimensional regularised
-#' regression (Lasso, Ridge) in a return-prediction context.
+#' one-month-ahead change in the Dow Jones Industrial Average, aligned over the
+#' period 2015-01 to 2019-12. Used to illustrate high-dimensional regularised
+#' regression (Lasso, Ridge) in a prediction context with more predictors than
+#' observations.
+#'
+#' The response is a difference in \emph{index points}, not a return. See the
+#' \code{DJI.Adjusted} entry under Format before interpreting any coefficient.
 #'
 #' @format An \code{xts} object with 60 monthly observations (index Jan 2015
 #' to Dec 2019, class \code{zoo::yearmon}) and 129 columns:
@@ -32,8 +36,10 @@
 #' The 128 macro predictors (columns 1 to 128) were downloaded from the
 #' McCracken–Ng FRED-MD database and transformed according to the recommended
 #' stationarity codes. The target column \code{DJI.Adjusted} was obtained from
-#' Yahoo Finance via \code{quantmod::getSymbols("^DJI")} and converted to
-#' monthly log-returns. All series are restricted to the 60-month window
+#' Yahoo Finance via \code{quantmod::getSymbols("^DJI")} and differenced one
+#' month ahead, giving a change in index points rather than a return: its
+#' standard deviation is about 780 and it ranges from roughly -2211 to +1785.
+#' All series are restricted to the 60-month window
 #' 2015-01 to 2019-12 and temporally aligned so that the predictor columns in
 #' row \eqn{t} can be used to predict \code{DJI.Adjusted} in row \eqn{t}.
 #'

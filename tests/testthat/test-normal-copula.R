@@ -58,3 +58,32 @@ test_that("f_normal_copula_pdf: positive corr raises density at concordant pts",
   val_ind <- as.numeric(f_normal_copula_pdf(c(0.8, 0.8), mu, S_indep))
   expect_true(val_pos > val_ind)
 })
+
+test_that("f_normal_copula_pdf stays finite in high dimension", {
+  # Regression test. The density used to be formed as
+  # exp(log_num) / prod(fs); by d = 300 both parts underflow to zero and the
+  # result came back as 0/0 = NaN, for an input whose density is known
+  # analytically to be exactly 1. The whole ratio is now taken in log space.
+  for (d in c(100L, 200L, 300L, 500L)) {
+    val <- as.numeric(f_normal_copula_pdf(rep(0.99, d), rep(0, d), diag(d)))
+    expect_true(is.finite(val), info = paste("d =", d))
+    expect_equal(val, 1, tolerance = 1e-8, info = paste("d =", d))
+  }
+})
+
+test_that("f_normal_copula_pdf log = TRUE agrees with log of the density", {
+  mu    <- c(0, 0)
+  Sigma <- matrix(c(1, 0.6, 0.6, 1), 2, 2)
+  u     <- c(0.3, 0.7)
+  expect_equal(
+    f_normal_copula_pdf(u, mu, Sigma, log = TRUE),
+    log(f_normal_copula_pdf(u, mu, Sigma)),
+    tolerance = 1e-12
+  )
+  # The log scale keeps working where the density itself would not
+  d <- 500L
+  expect_true(is.finite(
+    f_normal_copula_pdf(rep(0.99, d), rep(0, d), diag(d), log = TRUE)
+  ))
+  expect_error(f_normal_copula_pdf(u, mu, Sigma, log = NA), "'log'")
+})

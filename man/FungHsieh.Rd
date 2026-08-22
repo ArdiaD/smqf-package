@@ -69,11 +69,30 @@ irrespective of any day-of-month convention. To merge with a
 \section{Provenance}{
 
 This object is a static snapshot compiled for the book's examples, not a
-maintained feed. The reconstruction script lives in \code{data-raw/FungHsieh.R}.
-The exact index pair underlying \code{SS} and the precise vintage of the
-credit-spread series depend on the source used; confirm them against
-\code{data-raw/FungHsieh.R} before drawing conclusions that hinge on the
-definition of a particular factor.
+maintained feed, and the limits of what is documented about it should be
+stated plainly. The original download URLs and the vintage of each input
+series were not recorded when the snapshot was taken, so
+\code{data-raw/FungHsieh.R} is a \emph{contract harness} rather than a
+reconstruction script: it pins every property the book relies on and will
+fail loudly if a future rebuild diverges, but it cannot regenerate the
+object from source.
+
+The consequence is that the column semantics described above are
+\emph{inferred} from the behaviour of the shipped series and from the
+standard Fung–Hsieh construction, not verified against an archived input
+file. Some of them are corroborated by the data: \code{BAA} correlates
+\eqn{-0.51} with \code{CST10Y} and \eqn{-0.27} with \code{EMKT}, which is
+the signature of a credit \emph{spread} change (spreads widen as equities
+fall and as safe yields drop) and rules out a raw Baa yield change, which
+would track the ten-year yield positively. Others are not: the exact index
+pair underlying \code{SS}, the day-of-month sampling convention behind
+\code{CST10Y}, and the precise straddle construction behind the
+\code{PTFS*} series cannot be settled from the object alone.
+
+Treat the factor identifications as adequate for the illustrative
+regressions in the book, and re-derive the factors from
+\url{https://faculty.fuqua.duke.edu/~dah7/HFRFData.htm} before publishing
+any attribution result that turns on the definition of a particular factor.
 }
 
 \examples{

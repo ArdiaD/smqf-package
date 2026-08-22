@@ -1,6 +1,6 @@
 Package: smqf
 Title: Statistical Methods for Quantitative Finance
-Version: 1.1-6
+Version: 1.1-7
 Authors@R: c(
     person("David", "Ardia", role = c("aut", "cre"),
            email = "david.ardia.ch@gmail.com",
@@ -32,7 +32,9 @@ Suggests:
     quadprog,
     copula,
     Matrix,
-    readxl
+    readxl,
+    MASS,
+    mvtnorm
 Config/testthat/edition: 3
 Imports:
     graphics,

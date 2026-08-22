@@ -13,10 +13,16 @@
 #'   Typically a correlation matrix when defining a copula.
 #' @param nu Positive numeric scalar: degrees of freedom of the Student-\eqn{t}
 #'   distribution (\eqn{\nu > 0}).
+#' @param log Logical; if \code{TRUE} the log-density is returned. Defaults to
+#'   \code{FALSE}. In high dimension the density itself may overflow or
+#'   underflow the double-precision range even though its logarithm is
+#'   perfectly well behaved, so \code{log = TRUE} is the safe choice for
+#'   likelihoods.
 #'
 #' @return A numeric scalar: the value of the Student-\eqn{t} copula density
-#'   \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}. The value is returned as a
-#'   plain numeric scalar (not a \eqn{1 \times 1} matrix).
+#'   \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}, or its logarithm when
+#'   \code{log = TRUE}. The value is returned as a plain numeric scalar (not a
+#'   \eqn{1 \times 1} matrix).
 #'
 #' @details
 #' The multivariate Student-\eqn{t} copula density is given by
@@ -50,12 +56,16 @@
 #' # Compare to Gaussian copula (nu large)
 #' f_student_copula_pdf(c(0.6, 0.8), mu, Sigma, nu = 100)
 #'
+#' # High dimension: use the log scale, the density itself overflows
+#' d <- 300
+#' f_student_copula_pdf(rep(0.99, d), rep(0, d), diag(d), nu = 5, log = TRUE)
+#'
 #' @seealso \code{\link{f_normal_copula_pdf}}, \code{\link{f_clayton_copula_2d_pdf}},
 #'   \code{\link{f_gumbel_copula_2d_pdf}}
 #' @importFrom stats qt dt
 #' @importFrom pracma mldivide
 #' @export
-f_student_copula_pdf <- function (u, mu, Sigma, nu) {
+f_student_copula_pdf <- function (u, mu, Sigma, nu, log = FALSE) {
 
   ## --- input validation ---
   if (!is.numeric(u) || length(u) == 0L || any(!is.finite(u)) ||
@@ -71,6 +81,8 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
     stop("'Sigma' must be a finite numeric ", N, " x ", N, " matrix.", call. = FALSE)
   if (!is.numeric(nu) || length(nu) != 1L || !is.finite(nu) || nu <= 0)
     stop("'nu' must be a positive numeric scalar.", call. = FALSE)
+  if (!is.logical(log) || length(log) != 1L || is.na(log))
+    stop("'log' must be TRUE or FALSE.", call. = FALSE)
 
   ## Sigma must be a genuine covariance matrix: symmetric and positive
   ## definite. Without this check an asymmetric matrix is silently accepted
@@ -93,20 +105,24 @@ f_student_copula_pdf <- function (u, mu, Sigma, nu) {
   x <- mu + s * qt(p = u, df = nu)
 
   z2 <- drop((x - mu) %*% pracma::mldivide(Sigma, (x - mu)))
-  ## Gamma ratio computed in log space: gamma((nu + N)/2) / gamma(nu/2)
-  ## overflows to Inf/Inf = NaN for nu >~ 344 if computed directly.
-  # Everything through the log: the Gamma ratio overflows for nu above ~344
-  # and det(Sigma) underflows for large N.
+
+  # The whole ratio is formed in log space and exponentiated once, at the end.
+  # Two separate reasons force this. The Gamma ratio
+  # gamma((nu + N)/2) / gamma(nu/2) overflows to Inf/Inf = NaN for nu above
+  # about 344 if computed directly, and det(Sigma) underflows for large N.
+  # Exponentiating the numerator before dividing reintroduces the problem from
+  # the other side: at N = 200 the numerator overflows to Inf while the product
+  # of marginals is still finite, and by N = 300 both underflow to zero and the
+  # density comes back as 0/0 = NaN.
+  # base::log() is qualified throughout: the `log` argument shadows it here.
   log_num <- lgamma((nu + N) / 2) - lgamma(nu / 2) -
-    0.5 * N * log(nu * pi) -
+    0.5 * N * base::log(nu * pi) -
     0.5 * as.numeric(determinant(Sigma, logarithm = TRUE)$modulus) -
     0.5 * (nu + N) * log1p(z2 / nu)
-  Numerator <- exp(log_num)
 
-  fs <- dt((x - mu) / s, nu) / s
-  Denominator <- prod(fs)
+  log_den <- sum(dt((x - mu) / s, nu, log = TRUE) - base::log(s))
 
-  F_U <- Numerator / Denominator
+  log_F_U <- log_num - log_den
 
-  F_U
+  if (log) log_F_U else exp(log_F_U)
 }

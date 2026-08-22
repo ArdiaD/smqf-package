@@ -1,3 +1,69 @@
+# smqf 1.1-7
+
+## Bug fixes
+
+* `f_normal_copula_pdf()` and `f_student_copula_pdf()` returned `NaN` or `Inf`
+  for valid inputs in moderately high dimension. Both formed the density as
+  `exp(log_num) / prod(fs)`: the numerator was computed in log space, but
+  exponentiating it before dividing by the product of marginal densities
+  reintroduced the range problem from the other side. On an identity `Sigma`,
+  where the Gaussian copula density is exactly 1 everywhere, the function
+  returned 1 up to `d = 200` and `NaN` from `d = 300`, because numerator and
+  denominator both underflowed to zero. The whole ratio is now formed in log
+  space and exponentiated once. Bivariate results are unchanged to 1.8e-15
+  relative, so nothing that used these functions in two dimensions moves.
+
+* `f_tail_dependence()` failed with the internal message "missing value where
+  TRUE/FALSE needed" when `alpha` was `NA_real_` or `NaN`, because those are
+  numeric scalars and reached the range comparison. `alpha` is now checked for
+  finiteness first and the documented error message is raised.
+
+## New features
+
+* `f_normal_copula_pdf()` and `f_student_copula_pdf()` gain a `log` argument.
+  In high dimension the density itself can exceed the double-precision range
+  even when its logarithm is unremarkable -- the Student copula at
+  `u = rep(0.99, 500)` has a log density of 937 against an `exp()` ceiling of
+  710 -- so `log = TRUE` is the safe form for likelihoods.
+
+## Documentation
+
+* The `Fred` help page contradicted itself. The Format section correctly
+  described `DJI.Adjusted` as a one-month-ahead change in index points, while
+  the title, description and Details still called it a monthly log-return. The
+  data settle it: the column has a standard deviation of 780 and ranges from
+  -2211 to +1785. All three "log-return" statements are removed.
+
+* The `FungHsieh` help page now states plainly what its provenance can and
+  cannot establish. The original download URLs and vintages were not recorded,
+  so `data-raw/FungHsieh.R` is a contract harness rather than a reconstruction
+  script, and the column semantics are inferred rather than verified. Where the
+  data corroborate an identification it is now said so explicitly -- `BAA`
+  correlates -0.51 with `CST10Y` and -0.27 with `EMKT`, the signature of a
+  credit spread change rather than a raw Baa yield change -- and where they do
+  not, that is said too.
+
+## Infrastructure
+
+* `MASS` and `mvtnorm` are declared in `Suggests`. Both are used by the test
+  suite via `::`, and `R CMD check --as-cran` reported "'::' imports not
+  declared from: 'MASS' 'mvtnorm'". The check is now free of warnings.
+
+* New provenance and contract harnesses `data-raw/FamaFrench.R` and
+  `data-raw/TermStructure.R`, the last two of the twenty shipped datasets
+  without one. The FamaFrench harness pins the end-of-week stamping convention,
+  which is the property a naive re-import would silently shift by one week; the
+  TermStructure harness pins the `tau` attribute and the maturity ordering,
+  both of which are lost silently rather than loudly by a round trip through
+  `as.matrix()`.
+
+* Regression tests for the copula densities at `d` = 100, 200, 300 and 500, and
+  for non-finite `alpha` in `f_tail_dependence()`.
+
+* The `mvskPortfolios` source repository moved from `cdries/mvskPortfolios` to
+  `c3jg/mvskPortfolios`; the attribution links in `f_mvsk_portfolio()` follow it.
+  `R CMD check --as-cran` flagged the redirect.
+
 # smqf 1.1-6
 
 ## New features

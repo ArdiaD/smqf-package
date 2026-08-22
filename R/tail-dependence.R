@@ -78,7 +78,11 @@ f_tail_dependence <- function(x, y, alpha, side = c("lower", "upper")) {
     stop("'y' must be a non-empty finite numeric vector.", call. = FALSE)
   if (length(x) != length(y))
     stop("'x' and 'y' must have the same length.", call. = FALSE)
-  if (!is.numeric(alpha) || length(alpha) != 1L ||
+  ## is.finite() has to come before the range comparisons: alpha = NA_real_ or
+  ## NaN is numeric and of length one, so it reaches `alpha <= 0`, which
+  ## evaluates to NA and makes `if` fail with "missing value where TRUE/FALSE
+  ## needed" instead of the message intended here.
+  if (!is.numeric(alpha) || length(alpha) != 1L || !is.finite(alpha) ||
       alpha <= 0 || alpha >= 1)
     stop("'alpha' must be a numeric scalar in (0, 1).", call. = FALSE)
   ## --- end validation ---

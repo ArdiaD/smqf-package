@@ -4,7 +4,7 @@
 \alias{f_normal_copula_pdf}
 \title{Multivariate Normal Copula PDF}
 \usage{
-f_normal_copula_pdf(u, mu, Sigma)
+f_normal_copula_pdf(u, mu, Sigma, log = FALSE)
 }
 \arguments{
 \item{u}{Numeric vector of length \eqn{N} with entries in \eqn{(0,1)}:
@@ -14,11 +14,18 @@ the copula evaluation point.}
 multivariate normal distribution (usually zeros for a copula).}
 
 \item{Sigma}{Numeric positive-definite \eqn{N \times N} covariance matrix.}
+
+\item{log}{Logical; if \code{TRUE} the log-density is returned. Defaults to
+\code{FALSE}. In high dimension the density itself may overflow or
+underflow the double-precision range even though its logarithm is
+perfectly well behaved, so \code{log = TRUE} is the safe choice for
+likelihoods.}
 }
 \value{
 A numeric scalar: the value of the Gaussian copula density
-  \eqn{c(u; \mu, \Sigma)} at the point \code{u}. The value is returned
-  as a plain numeric scalar (not a \eqn{1 \times 1} matrix).
+  \eqn{c(u; \mu, \Sigma)} at the point \code{u}, or its logarithm when
+  \code{log = TRUE}. The value is returned as a plain numeric scalar (not a
+  \eqn{1 \times 1} matrix).
 }
 \description{
 Computes the probability density function (PDF) of the Gaussian (normal)
@@ -53,6 +60,10 @@ f_normal_copula_pdf(c(0.5, 0.8), mu, Sigma)
 
 # Compare with independence (Sigma = I)
 f_normal_copula_pdf(c(0.5, 0.8), mu, diag(2))
+
+# The independence copula has density 1 everywhere, in any dimension
+d <- 300
+f_normal_copula_pdf(rep(0.99, d), rep(0, d), diag(d))
 
 }
 \references{

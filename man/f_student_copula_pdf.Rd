@@ -4,7 +4,7 @@
 \alias{f_student_copula_pdf}
 \title{Multivariate Student-t Copula PDF}
 \usage{
-f_student_copula_pdf(u, mu, Sigma, nu)
+f_student_copula_pdf(u, mu, Sigma, nu, log = FALSE)
 }
 \arguments{
 \item{u}{Numeric vector of length \eqn{N} with entries in \eqn{(0,1)}:
@@ -18,11 +18,18 @@ Typically a correlation matrix when defining a copula.}
 
 \item{nu}{Positive numeric scalar: degrees of freedom of the Student-\eqn{t}
 distribution (\eqn{\nu > 0}).}
+
+\item{log}{Logical; if \code{TRUE} the log-density is returned. Defaults to
+\code{FALSE}. In high dimension the density itself may overflow or
+underflow the double-precision range even though its logarithm is
+perfectly well behaved, so \code{log = TRUE} is the safe choice for
+likelihoods.}
 }
 \value{
 A numeric scalar: the value of the Student-\eqn{t} copula density
-  \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}. The value is returned as a
-  plain numeric scalar (not a \eqn{1 \times 1} matrix).
+  \eqn{c(u; \mu, \Sigma, \nu)} at \code{u}, or its logarithm when
+  \code{log = TRUE}. The value is returned as a plain numeric scalar (not a
+  \eqn{1 \times 1} matrix).
 }
 \description{
 Computes the probability density function (PDF) of the multivariate
@@ -54,6 +61,10 @@ f_student_copula_pdf(c(0.6, 0.8), mu, Sigma, nu = 5)
 
 # Compare to Gaussian copula (nu large)
 f_student_copula_pdf(c(0.6, 0.8), mu, Sigma, nu = 100)
+
+# High dimension: use the log scale, the density itself overflows
+d <- 300
+f_student_copula_pdf(rep(0.99, d), rep(0, d), diag(d), nu = 5, log = TRUE)
 
 }
 \references{
