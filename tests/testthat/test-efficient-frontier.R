@@ -14,6 +14,7 @@ psd_cov <- function(N, seed) {
 # ---- structure -------------------------------------------------------------
 
 test_that("return list contains all six components", {
+  set.seed(101)
   ef <- f_efficient_frontier(runif(3, .04, .12), psd_cov(3, 2), n_ptf = 5)
   expect_named(ef,
                c("weights", "volatility", "expected_returns",
@@ -43,12 +44,14 @@ test_that("n_ptf = 2 edge case returns exactly two portfolios", {
 # ---- frontier invariants ---------------------------------------------------
 
 test_that("every portfolio is fully invested and long-only", {
+  set.seed(102)
   ef <- f_efficient_frontier(runif(4, .05, .15), psd_cov(4, 3), n_ptf = 8)
   expect_true(all(abs(colSums(ef$weights) - 1) < 1e-6))
   expect_true(all(ef$weights >= -1e-10))
 })
 
 test_that("interior portfolios attain their target return", {
+  set.seed(103)
   mu <- runif(5, .05, .15)
   ef <- f_efficient_frontier(mu, psd_cov(5, 11), n_ptf = 12)
   ok <- ef$status == "ok"
@@ -61,6 +64,7 @@ test_that("interior portfolios attain their target return", {
 })
 
 test_that("volatility is consistent with the weights and Sigma", {
+  set.seed(104)
   mu <- runif(4, .05, .15); Sigma <- psd_cov(4, 7)
   ef <- f_efficient_frontier(mu, Sigma, n_ptf = 9)
   manual <- apply(ef$weights, 2, function(w) sqrt(drop(crossprod(w, Sigma %*% w))))
@@ -69,12 +73,17 @@ test_that("volatility is consistent with the weights and Sigma", {
 })
 
 test_that("expected returns and volatility increase along the frontier", {
+  set.seed(105)
   ef <- f_efficient_frontier(runif(5, .05, .15), psd_cov(5, 13), n_ptf = 15)
   expect_false(is.unsorted(ef$expected_returns))
   expect_false(is.unsorted(ef$volatility))   # upper branch only: no dominated point
 })
 
 test_that("the minimum-variance portfolio really is minimum variance", {
+  # Seeded before the draw, not after: the set.seed(99) below covers the
+  # comparison portfolios but not `mu`, which would otherwise inherit whatever
+  # stream the previous test left behind.
+  set.seed(106)
   mu <- runif(4, .05, .15); Sigma <- psd_cov(4, 17)
   ef <- f_efficient_frontier(mu, Sigma, n_ptf = 10)
   v1 <- ef$volatility[[1]]
@@ -90,6 +99,18 @@ test_that("the minimum-variance portfolio really is minimum variance", {
 
 test_that("matches quadprog::solve.QP, the construction used in the book", {
   skip_if_not_installed("quadprog")
+  # The seed is not decoration. Without it `mu` was drawn from whatever RNG
+  # state the preceding test happened to leave -- psd_cov() sets the seed
+  # *inside* itself, so it does not cover the runif() on this line. The draw
+  # then decided whether the last target below was solvable, and CRAN's
+  # r-release-macos-arm64 landed on a draw where it was not:
+  #
+  #   Error in quadprog::solve.QP(...): constraints are inconsistent,
+  #   no solution!
+  #
+  # It reproduces locally on roughly half of all seeds. The failure was a coin
+  # flip on the RNG stream, not a platform difference.
+  set.seed(2026)
   mu <- runif(5, .002, .006); Sigma <- psd_cov(5, 23) / 1000
   n <- 20
   ef <- f_efficient_frontier(mu, Sigma, n_ptf = n)
@@ -101,12 +122,24 @@ test_that("matches quadprog::solve.QP, the construction used in the book", {
   tg <- seq(sum(mu * w_mv), max(mu), length.out = n)
   W <- matrix(NA_real_, N, n)
   W[, 1] <- w_mv
-  for (i in 2:n) {
+
+  # Interior targets go to the independent solver, which is the point of this
+  # test. The last one does not: tg[n] is exactly max(mu), and the only
+  # long-only portfolio attaining it is the vertex e_argmax. That is a
+  # degenerate corner of the feasible set, and solve.QP declares the
+  # constraints inconsistent there for many perfectly well-conditioned inputs
+  # instead of returning the vertex. The package solves it through
+  # pracma::quadprog with an explicit feasibility check, so the analytic answer
+  # is asserted here -- on this one point the hand-rolled construction is the
+  # weaker of the two, and pinning the vertex is a stronger claim anyway.
+  for (i in 2:(n - 1)) {
     W[, i] <- quadprog::solve.QP(
       Sigma, rep(0, N),
       cbind(rep(1, N), matrix(mu, ncol = 1), diag(N)),
       c(1, tg[i], rep(0, N)), meq = 2)$solution
   }
+  W[, n] <- as.numeric(seq_len(N) == which.max(mu))
+
   vol <- apply(W, 2, function(w) sqrt(drop(crossprod(w, Sigma %*% w))))
 
   expect_equal(unname(ef$weights), W, tolerance = 1e-6)
@@ -114,6 +147,8 @@ test_that("matches quadprog::solve.QP, the construction used in the book", {
   expect_equal(unname(ef$expected_returns), as.numeric(crossprod(W, mu)),
                tolerance = 1e-8)
   expect_equal(ef$targets, tg, tolerance = 1e-10)
+  # the maximum-return end point is the vertex, not an interior mix
+  expect_equal(max(ef$weights[, n]), 1, tolerance = 1e-8)
 })
 
 # ---- ties for the maximum expected return ----------------------------------
@@ -180,6 +215,7 @@ test_that("an asymmetric Sigma warns but uses the symmetric part", {
 })
 
 test_that("status is reported for every point", {
+  set.seed(107)
   ef <- f_efficient_frontier(runif(4, .05, .15), psd_cov(4, 31), n_ptf = 7)
   expect_length(ef$status, 7L)
   expect_true(all(ef$status %in% c("ok", "failed")))

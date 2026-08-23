@@ -1,6 +1,6 @@
 Package: smqf
 Title: Statistical Methods for Quantitative Finance
-Version: 1.1-7
+Version: 1.1-8
 Authors@R: c(
     person("David", "Ardia", role = c("aut", "cre", "cph", "fnd"),
            email = "david.ardia.ch@gmail.com",

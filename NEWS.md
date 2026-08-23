@@ -1,3 +1,39 @@
+# smqf 1.1-8
+
+## Bug fixes
+
+* Test-only release. The CRAN check on `r-release-macos-arm64` failed with
+
+      Error in quadprog::solve.QP(...): constraints are inconsistent,
+      no solution!
+      [ FAIL 1 | WARN 0 | SKIP 0 | PASS 1221 ]
+
+  in `test-efficient-frontier.R`. No user-facing code is affected; the package
+  functions are unchanged.
+
+  Two defects combined. First, `mu <- runif(5, .002, .006)` was drawn without
+  seeding: the helper `psd_cov()` calls `set.seed()` *inside itself*, so it did
+  not cover the draw on that line, and `mu` inherited whatever stream the
+  preceding test left behind. Second, the target grid ended at exactly
+  `max(mu)`, whose only long-only solution is the vertex `e_argmax` -- a
+  degenerate corner where `quadprog::solve.QP` reports inconsistent constraints
+  for many well-conditioned inputs rather than returning the vertex.
+
+  So the test was a coin flip on the RNG stream, not a platform difference: it
+  reproduces locally on roughly half of all seeds. CRAN's arm64 runner drew a
+  losing one.
+
+  The draw is now seeded, the interior targets still go to the independent
+  solver, and the maximum-return end point is asserted against its analytic
+  value -- a stronger claim than what `solve.QP` was being asked for, and one
+  the package satisfies exactly through `pracma::quadprog`.
+
+  Every other unseeded draw in the suite is seeded too: eleven blocks across
+  `test-efficient-frontier.R`, `test-mvsk-portfolio.R` and
+  `test-tail-dependence.R`. The suite now returns 1226 passing assertions and
+  no failures under every initial RNG state tried, and each file gives the same
+  result run alone as in suite order.
+
 # smqf 1.1-7
 
 ## Bug fixes

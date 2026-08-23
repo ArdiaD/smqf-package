@@ -49,6 +49,7 @@ test_that("a numeric reference portfolio is accepted and column names survive", 
 })
 
 test_that("f_mvsk_portfolio validates its inputs", {
+  set.seed(108)
   skip_if_not_installed("PerformanceAnalytics")
   m <- make_moments()
   expect_error(f_mvsk_portfolio(M2 = NULL), "square numeric covariance")

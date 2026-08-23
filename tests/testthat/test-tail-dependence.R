@@ -40,6 +40,7 @@ test_that("f_tail_dependence: perfect anticorrelation gives lambda near 0 in upp
 })
 
 test_that("input validation: alpha outside (0,1) raises error", {
+  set.seed(109)
   x <- rnorm(100); y <- rnorm(100)
   expect_error(f_tail_dependence(x, y, alpha = 0),   "'alpha'")
   expect_error(f_tail_dependence(x, y, alpha = 1),   "'alpha'")
@@ -48,10 +49,12 @@ test_that("input validation: alpha outside (0,1) raises error", {
 })
 
 test_that("input validation: length mismatch raises error", {
+  set.seed(110)
   expect_error(f_tail_dependence(rnorm(5), rnorm(6), alpha = 0.1), "'x' and 'y'")
 })
 
 test_that("input validation: non-numeric x or y raises error", {
+  set.seed(111)
   expect_error(f_tail_dependence("a", rnorm(5), alpha = 0.1), "'x'")
   expect_error(f_tail_dependence(rnorm(5), "b", alpha = 0.1), "'y'")
 })
