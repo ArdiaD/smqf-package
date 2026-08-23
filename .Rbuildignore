@@ -4,3 +4,4 @@
 ^\.github$
 ^dist$
 ^data-raw$
+^\.Rproj\.user$
