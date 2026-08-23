@@ -64,6 +64,17 @@
   `c3jg/mvskPortfolios`; the attribution links in `f_mvsk_portfolio()` follow it.
   `R CMD check --as-cran` flagged the redirect.
 
+* The test suite is roughly three times faster, 23.5s to 6.9s locally. One
+  helper in `test-copula-reference.R` accounted for 85% of the runtime: a
+  midpoint-rule integration on a 220 x 220 grid, called twelve times, i.e.
+  580,800 scalar density evaluations each re-running its own input validation.
+  The grid drops to 70 x 70, which the O(1/n^2) convergence pays for in
+  accuracy the tolerances never needed -- so those are tightened at the same
+  time, from 0.05 to between 0.002 and 0.03, calibrated at four times the worst
+  error observed over every parameter value the test uses. The checks are now
+  both faster and stricter: at the old tolerance a 3% error in a normalizing
+  constant would have passed.
+
 # smqf 1.1-6
 
 ## New features

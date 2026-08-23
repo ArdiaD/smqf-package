@@ -72,9 +72,23 @@ test_that("the Gumbel density and cdf match copula::dCopula and pCopula", {
 # A copula density integrates to one over the unit square. A wrong
 # multiplicative constant would pass every shape test but fail this.
 
-integrate_copula <- function(f, n = 220) {
+integrate_copula <- function(f, n = 70) {
   # Midpoint rule on the open square. The Archimedean densities diverge at the
-  # corners, so the tolerance below is loose on purpose.
+  # corners, which is what sets the achievable accuracy.
+  #
+  # On the grid size: this helper dominated the whole test suite. It is called
+  # twelve times, and at the former n = 220 that is 12 * 220^2 = 580,800 scalar
+  # density evaluations, each one re-running the input validation (including an
+  # eigen() on a 2x2 matrix). It accounted for 85% of the suite's runtime, and
+  # for roughly four of the 4.6 minutes the tests took on win-builder.
+  #
+  # The midpoint rule converges as O(1/n^2), so dropping to n = 70 costs a
+  # factor of ten in work and about a factor of ten in accuracy -- from a worst
+  # case of 0.0021 to 0.0069, against tolerances that used to sit at 0.05. The
+  # tolerances below are therefore *tightened* at the same time, to four times
+  # the worst error actually observed across every parameter value used here.
+  # The test is now both faster and stricter than before: at the old tolerance
+  # of 0.05 a 3% error in a normalizing constant would have passed unnoticed.
   h <- 1 / n
   g <- seq(h / 2, 1 - h / 2, by = h)
   s <- 0
@@ -86,20 +100,22 @@ test_that("the elliptical copula densities integrate to one", {
   for (rho in c(-0.4, 0, 0.6)) {
     S <- matrix(c(1, rho, rho, 1), 2)
     expect_equal(integrate_copula(function(u) f_normal_copula_pdf(u, c(0, 0), S)),
-                 1, tolerance = 0.02, info = paste("normal, rho =", rho))
+                 1, tolerance = 0.002, info = paste("normal, rho =", rho))
     expect_equal(integrate_copula(function(u) f_student_copula_pdf(u, c(0, 0), S, 8)),
-                 1, tolerance = 0.03, info = paste("student, rho =", rho))
+                 1, tolerance = 0.004, info = paste("student, rho =", rho))
   }
 })
 
 test_that("the Archimedean copula densities integrate to one", {
+  # Looser than the elliptical cases because both densities diverge at a
+  # corner, which the midpoint rule resolves poorly however fine the grid.
   for (th in c(0.5, 1, 2)) {
     expect_equal(integrate_copula(function(u) f_clayton_copula_2d_pdf(u, th)),
-                 1, tolerance = 0.05, info = paste("clayton, theta =", th))
+                 1, tolerance = 0.02, info = paste("clayton, theta =", th))
   }
   for (th in c(1.2, 2, 3)) {
     expect_equal(integrate_copula(function(u) f_gumbel_copula_2d_pdf(u, th)),
-                 1, tolerance = 0.05, info = paste("gumbel, theta =", th))
+                 1, tolerance = 0.03, info = paste("gumbel, theta =", th))
   }
 })
 
