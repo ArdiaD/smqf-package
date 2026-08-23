@@ -71,21 +71,20 @@ the changes below cover everything since the release currently on CRAN.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
 ## Notes
 
-* The DESCRIPTION is flagged for a possibly mis-spelled word, "Ardia", which is
-  the author's surname.
+* The source URL for the Fung-Hsieh factors in `man/FungHsieh.Rd` has been
+  updated. The previous address, `https://faculty.fuqua.duke.edu/~dah7/`,
+  now returns `301 Moved Permanently` to the Fuqua faculty directory index,
+  which carries none of the data. David Hsieh's Hedge Fund Data Library is
+  live at `https://people.duke.edu/~dah7/HFRFData.htm` and that is what the
+  documentation now cites.
 
-* One URL is flagged as possibly invalid:
-  `https://faculty.fuqua.duke.edu/~dah7/HFRFData.htm`, cited in
-  `man/FungHsieh.Rd` as the source of the Fung-Hsieh trend-following factors.
-  The URL resolves (`Status: 200`); the check reports a redirect to the Duke
-  faculty directory index. We have deliberately kept the specific address
-  rather than the redirect target, because the target is a generic staff
-  listing that does not identify the data source. Should the maintainer of that
-  page publish a new canonical address we will follow it.
+* Earlier submissions were noted for a possibly mis-spelled word in
+  DESCRIPTION, "Ardia", which is the author's surname. It did not arise in
+  this round.
 
 * Several market datasets are ported from the GPL (>= 2)-licensed `qrmdata`
   package (Hofert, Hornik & McNeil) and are redistributed here under the same

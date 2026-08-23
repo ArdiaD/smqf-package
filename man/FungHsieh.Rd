@@ -37,7 +37,7 @@ series such as \code{PerformanceAnalytics::edhec}.
 \source{
 Compiled from public factor sources commonly used in the Fung–Hsieh
 literature: David A. Hsieh's hedge-fund data library
-(\url{https://faculty.fuqua.duke.edu/~dah7/HFRFData.htm}) for the
+(\url{https://people.duke.edu/~dah7/HFRFData.htm}) for the
 \code{PTFS*} straddle factors, and FRED/H.15 for the yield and credit
 series. See \code{data-raw/FungHsieh.R} for the assembly steps.
 }
@@ -91,7 +91,7 @@ pair underlying \code{SS}, the day-of-month sampling convention behind
 
 Treat the factor identifications as adequate for the illustrative
 regressions in the book, and re-derive the factors from
-\url{https://faculty.fuqua.duke.edu/~dah7/HFRFData.htm} before publishing
+\url{https://people.duke.edu/~dah7/HFRFData.htm} before publishing
 any attribution result that turns on the definition of a particular factor.
 }
 

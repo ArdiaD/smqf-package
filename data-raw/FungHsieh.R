@@ -35,7 +35,7 @@ library(zoo)
 #
 #   PTFSBD / PTFSCOM / PTFSFX
 #     David A. Hsieh's hedge-fund data library:
-#     https://faculty.fuqua.duke.edu/~dah7/HFRFData.htm
+#     https://people.duke.edu/~dah7/HFRFData.htm
 #     -> which file, and which download date?
 #
 #   CST10Y  FRED series DGS10 (or H.15), monthly, first difference.
