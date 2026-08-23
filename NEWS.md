@@ -11,17 +11,23 @@
   in `test-efficient-frontier.R`. No user-facing code is affected; the package
   functions are unchanged.
 
-  Two defects combined. First, `mu <- runif(5, .002, .006)` was drawn without
-  seeding: the helper `psd_cov()` calls `set.seed()` *inside itself*, so it did
-  not cover the draw on that line, and `mu` inherited whatever stream the
-  preceding test left behind. Second, the target grid ended at exactly
-  `max(mu)`, whose only long-only solution is the vertex `e_argmax` -- a
-  degenerate corner where `quadprog::solve.QP` reports inconsistent constraints
-  for many well-conditioned inputs rather than returning the vertex.
+  The cause is the target grid, which ended at exactly `max(mu)`. The only
+  long-only portfolio attaining that return is the vertex `e_argmax`, a
+  degenerate corner of the feasible set where `quadprog::solve.QP` may report
+  inconsistent constraints instead of returning the vertex. Whether it does
+  depends on the platform's linear algebra: the failing input reproduces
+  exactly here (the assertion counts line up -- CRAN's 1221 passes plus the
+  four assertions the aborted test never reached equal the 1225 seen locally,
+  so the RNG stream and `mu` were identical), and `solve.QP` succeeds on
+  aarch64-apple-darwin20 with R 4.5.2 while failing on aarch64-apple-darwin23
+  with R 4.6.1.
 
-  So the test was a coin flip on the RNG stream, not a platform difference: it
-  reproduces locally on roughly half of all seeds. CRAN's arm64 runner drew a
-  losing one.
+  A second, independent fragility sat behind it: `mu <- runif(5, .002, .006)`
+  was drawn without seeding, because the helper `psd_cov()` calls `set.seed()`
+  *inside itself* and so did not cover that line. That did not cause this
+  failure -- the stream happened to be identical on both machines -- but it
+  made the input to a known-fragile construction unpredictable, and roughly
+  half of all seeds produce a `mu` that fails the same way locally.
 
   The draw is now seeded, the interior targets still go to the independent
   solver, and the maximum-return end point is asserted against its analytic

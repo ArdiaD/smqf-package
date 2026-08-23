@@ -13,21 +13,26 @@ This is a test-only fix for the check failure reported on 1.1-7
     Error in quadprog::solve.QP(...): constraints are inconsistent, no solution!
     [ FAIL 1 | WARN 0 | SKIP 0 | PASS 1221 ]
 
-Every other flavour running 1.1-7 was OK, which made it look
-platform-specific. It is not.
+Every other flavour running 1.1-7 was OK. The failure is genuinely specific to
+that platform, and it is in the test rather than in the package: no exported
+function is involved.
 
-Two defects combined in that test. The vector of expected returns was drawn
-with `runif()` and never seeded — the helper that builds the covariance matrix
-calls `set.seed()` inside itself, so it did not cover that draw, and the vector
-inherited whatever RNG stream the preceding test happened to leave. The target
-grid then ended at exactly `max(mu)`, whose only long-only solution is the
-vertex `e_argmax`: a degenerate corner of the feasible set where
-`quadprog::solve.QP` reports inconsistent constraints for many well-conditioned
-inputs instead of returning the vertex.
+The cause is the target grid, which ended at exactly `max(mu)`. The only
+long-only portfolio attaining that return is the vertex `e_argmax`, a
+degenerate corner of the feasible set where `quadprog::solve.QP` may report
+inconsistent constraints instead of returning the vertex, depending on the
+platform's linear algebra. The assertion counts confirm the input was the same
+on both machines: CRAN's 1221 passes plus the four assertions the aborted test
+never reached equal the 1225 seen locally. `solve.QP` succeeds on
+aarch64-apple-darwin20 with R 4.5.2 and fails on aarch64-apple-darwin23 with
+R 4.6.1 for that identical input.
 
-The test was therefore a coin flip on the RNG stream rather than a platform
-difference. It reproduces on this machine for roughly half of all seeds; the
-arm64 runner drew a losing one.
+A second, independent fragility sat behind it: the expected-return vector was
+drawn with `runif()` and never seeded, because the helper that builds the
+covariance matrix calls `set.seed()` inside itself and so did not cover that
+draw. That did not cause this failure, but it left the input to a
+known-fragile construction unpredictable — roughly half of all seeds produce a
+vector that fails the same way locally.
 
 ### The fix
 

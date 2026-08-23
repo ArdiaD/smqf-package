@@ -99,17 +99,22 @@ test_that("the minimum-variance portfolio really is minimum variance", {
 
 test_that("matches quadprog::solve.QP, the construction used in the book", {
   skip_if_not_installed("quadprog")
-  # The seed is not decoration. Without it `mu` was drawn from whatever RNG
-  # state the preceding test happened to leave -- psd_cov() sets the seed
-  # *inside* itself, so it does not cover the runif() on this line. The draw
-  # then decided whether the last target below was solvable, and CRAN's
-  # r-release-macos-arm64 landed on a draw where it was not:
+  # The seed is not decoration. Without it `mu` came from whatever RNG state
+  # the preceding test happened to leave -- psd_cov() sets the seed *inside*
+  # itself, so it does not cover the runif() on this line. Roughly half of all
+  # seeds produce a `mu` for which the last target below is unsolvable here.
+  #
+  # That is not, however, what broke on CRAN. r-release-macos-arm64 reported
   #
   #   Error in quadprog::solve.QP(...): constraints are inconsistent,
   #   no solution!
   #
-  # It reproduces locally on roughly half of all seeds. The failure was a coin
-  # flip on the RNG stream, not a platform difference.
+  # on the *same* `mu` this machine solves without complaint: its 1221 passes
+  # plus the four assertions the aborted test never reached equal the 1225 seen
+  # locally, so the stream was identical. solve.QP succeeds on
+  # aarch64-apple-darwin20 / R 4.5.2 and fails on aarch64-apple-darwin23 /
+  # R 4.6.1 for that input. The degenerate vertex handled below is the real
+  # cause; the seed closes an independent hole.
   set.seed(2026)
   mu <- runif(5, .002, .006); Sigma <- psd_cov(5, 23) / 1000
   n <- 20
