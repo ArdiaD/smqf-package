@@ -22,16 +22,16 @@
 #'     low market correlation confirm a long–short spread rather than a
 #'     directional return.}
 #'   \item{CST10Y}{\emph{Change} in the 10-year U.S. Treasury constant-maturity
-#'     yield, in percentage points per month (range −1.11 to 0.65). Not a
+#'     yield, in percentage points per month (range -1.11 to 0.65). Not a
 #'     return.}
 #'   \item{BAA}{\emph{Change} in the Moody's Baa credit spread, in percentage
-#'     points per month (range −0.99 to 1.45). Not a return.}
+#'     points per month (range -0.99 to 1.45). Not a return.}
 #'   \item{PTFSBD}{Fung–Hsieh primitive trend-following straddle: bond, \% per
-#'     month. Mean −1.67, sd 15.23.}
+#'     month. Mean -1.67, sd 15.23.}
 #'   \item{PTFSCOM}{Fung–Hsieh primitive trend-following straddle: commodity,
-#'     \% per month. Mean −0.55, sd 14.28.}
+#'     \% per month. Mean -0.55, sd 14.28.}
 #'   \item{PTFSFX}{Fung–Hsieh primitive trend-following straddle: currency,
-#'     \% per month. Mean −0.85, sd 19.48.}
+#'     \% per month. Mean -0.85, sd 19.48.}
 #' }
 #'
 #' @details

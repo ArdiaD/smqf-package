@@ -87,9 +87,22 @@ if (length(lint_res)) {
 }
 
 # 9) Local CRAN-style check
-message("\n==> Local R CMD check --as-cran")
+message("\n==> Local R CMD check --as-cran (including the PDF manual)")
 # rcmdcheck returns an object with summaries; devtools::check() opens viewer; prefer rcmdcheck here
-chk <- rcmdcheck::rcmdcheck(args = c("--as-cran"), error_on = "never", build_args = "--no-manual")
+#
+# Do NOT pass build_args = "--no-manual" here. It used to be set, and it made
+# this preflight structurally unable to catch a whole class of defect: CRAN and
+# win-builder always build the Rd -> PDF manual, so anything that breaks that
+# build passes locally and fails on submission. It hid a real one for several
+# releases -- five U+2212 MINUS SIGN characters in the FungHsieh \format
+# section, which the standard LaTeX utf8 input encoding cannot typeset:
+#
+#   ! LaTeX Error: Unicode character ^^e2^^88^^92 (U+2212)
+#                  not set up for use with LaTeX.
+#
+# Building the manual costs about ten seconds. Skipping it costs a rejected
+# submission.
+chk <- rcmdcheck::rcmdcheck(args = c("--as-cran"), error_on = "never")
 summary <- rcmdcheck::parse_check(chk$results)
 print(chk)
 if (length(chk$errors))  message("Errors: ", length(chk$errors))

@@ -2,7 +2,7 @@ Package: smqf
 Title: Statistical Methods for Quantitative Finance
 Version: 1.1-7
 Authors@R: c(
-    person("David", "Ardia", role = c("aut", "cre"),
+    person("David", "Ardia", role = c("aut", "cre", "cph", "fnd"),
            email = "david.ardia.ch@gmail.com",
            comment = c(ORCID = "0000-0003-2823-782X")),
     person("Marius", "Hofert", role = c("ctb", "cph"),
