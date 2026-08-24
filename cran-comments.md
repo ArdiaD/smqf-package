@@ -56,10 +56,11 @@ the package is unable to reach the failing code path on any machine available
 to us. The structure above is intended to be correct whichever grid point the
 solver refuses.
 
-The suite now returns 1226 passing assertions and no failures under every
-initial RNG state tried (seeds 1, 23, 42, 99, 2026, 7777), and each file gives
-the same result run alone as in suite order. Seeds 23, 42 and 99 are among
-those that reproduced the original failure.
+The suite now returns 1228 passing assertions and no failures under every
+initial RNG state tried (seeds 1, 23, 42, 99, 2026, 7777), with an identical
+count in each case, and each file gives the same result run alone as in suite
+order. Seeds 23, 42 and 99 are among those that reproduced the original failure
+locally.
 
 ## Test environments
 
