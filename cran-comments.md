@@ -66,7 +66,12 @@ locally.
 
 * Local macOS (aarch64-apple-darwin20), R 4.5.2, `R CMD check --as-cran`
   including the PDF manual
-* Windows (win-builder), R devel
+* Windows (win-builder), R release 4.6.1 and R devel
+
+Note that win-builder offers no macOS arm64 flavour, so none of these
+environments exercises the one that reported the failure. The local machine is
+aarch64 but its R is built for darwin20, and it solves the failing input
+without complaint.
 
 ## R CMD check results
 
@@ -74,7 +79,7 @@ locally.
 
 ## Notes
 
-* `Days since last update: 0`. 1.1-7 was published on 2026-08-23 and the check
+* `Days since last update`. 1.1-7 was published on 2026-08-23 and the check
   failure above was reported against it the same day, with a fix-by date of
   2026-09-13. This submission exists only to clear that failure. We would
   otherwise not submit again so soon, and we have no further changes planned.
