@@ -29,10 +29,20 @@
   made the input to a known-fragile construction unpredictable, and roughly
   half of all seeds produce a `mu` that fails the same way locally.
 
-  The draw is now seeded, the interior targets still go to the independent
-  solver, and the maximum-return end point is asserted against its analytic
-  value -- a stronger claim than what `solve.QP` was being asked for, and one
-  the package satisfies exactly through `pracma::quadprog`.
+  The maximum-return end point is no longer sent to `solve.QP` at all; it is
+  asserted against its analytic value, the vertex, which is a stronger claim
+  than the one `solve.QP` was being asked to satisfy and one the package meets
+  exactly through `pracma::quadprog`.
+
+  The interior targets still go to the independent solver, but wrapped rather
+  than bare. The reason is worth stating: the failure could not be reproduced
+  on the machine fixing it, and neither CRAN nor the M1mac service reports
+  which grid point failed. Locally only the vertex ever fails, but excluding
+  only the vertex would be a guess. Whether `solve.QP` can solve a given point
+  is a property of the platform's linear algebra rather than of the package, so
+  a point it declines is now skipped, the points it solves must still agree,
+  and a guard requires at least 18 of the 20 to have been solved so that a
+  collapsed solver cannot masquerade as a pass. The draw is seeded as well.
 
   Every other unseeded draw in the suite is seeded too: eleven blocks across
   `test-efficient-frontier.R`, `test-mvsk-portfolio.R` and

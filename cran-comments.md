@@ -36,16 +36,25 @@ vector that fails the same way locally.
 
 ### The fix
 
-* The draw is seeded.
-* Interior targets still go to `quadprog::solve.QP`, which is the point of the
-  test — an independent cross-check of the package's own solver.
-* The maximum-return end point is asserted against its analytic value, the
-  vertex, which the package reaches exactly through `pracma::quadprog` with an
-  explicit feasibility check. That is a stronger assertion than the one
-  `solve.QP` was being asked to satisfy.
-* Every other unseeded draw in the suite is seeded as well: eleven blocks
-  across `test-efficient-frontier.R`, `test-mvsk-portfolio.R` and
+* The maximum-return end point is no longer passed to `quadprog::solve.QP`. It
+  is asserted against its analytic value, the vertex, which the package reaches
+  exactly through `pracma::quadprog` with an explicit feasibility check — a
+  stronger assertion than the one `solve.QP` was being asked to satisfy.
+* Interior targets still go to `solve.QP`, which is the point of the test, but
+  wrapped. We could not reproduce the failure on the machine fixing it, and
+  neither report says which grid point failed, so excluding only the vertex
+  would be a guess. A point the solver declines is skipped, the points it
+  solves must still agree with the package to 1e-6, and a guard requires at
+  least 18 of the 20 points to have been solved so that a collapsed solver
+  cannot pass silently.
+* The unseeded draw is seeded, along with eleven others across
+  `test-efficient-frontier.R`, `test-mvsk-portfolio.R` and
   `test-tail-dependence.R`.
+
+We are aware this fix is verified by construction rather than by reproduction:
+the package is unable to reach the failing code path on any machine available
+to us. The structure above is intended to be correct whichever grid point the
+solver refuses.
 
 The suite now returns 1226 passing assertions and no failures under every
 initial RNG state tried (seeds 1, 23, 42, 99, 2026, 7777), and each file gives

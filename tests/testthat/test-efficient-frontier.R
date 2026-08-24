@@ -128,32 +128,53 @@ test_that("matches quadprog::solve.QP, the construction used in the book", {
   W <- matrix(NA_real_, N, n)
   W[, 1] <- w_mv
 
-  # Interior targets go to the independent solver, which is the point of this
-  # test. The last one does not: tg[n] is exactly max(mu), and the only
-  # long-only portfolio attaining it is the vertex e_argmax. That is a
-  # degenerate corner of the feasible set, and solve.QP declares the
-  # constraints inconsistent there for many perfectly well-conditioned inputs
-  # instead of returning the vertex. The package solves it through
-  # pracma::quadprog with an explicit feasibility check, so the analytic answer
-  # is asserted here -- on this one point the hand-rolled construction is the
-  # weaker of the two, and pinning the vertex is a stronger claim anyway.
-  for (i in 2:(n - 1)) {
-    W[, i] <- quadprog::solve.QP(
-      Sigma, rep(0, N),
-      cbind(rep(1, N), matrix(mu, ncol = 1), diag(N)),
-      c(1, tg[i], rep(0, N)), meq = 2)$solution
-  }
+  # The last target, tg[n], is exactly max(mu). The only long-only portfolio
+  # attaining it is the vertex e_argmax -- a degenerate corner of the feasible
+  # set, and the point where solve.QP refuses on every input that fails here.
+  # It is asserted against its analytic value instead, which is a stronger
+  # claim than the one solve.QP was being asked to satisfy, and one the package
+  # meets exactly through pracma::quadprog with an explicit feasibility check.
   W[, n] <- as.numeric(seq_len(N) == which.max(mu))
 
-  vol <- apply(W, 2, function(w) sqrt(drop(crossprod(w, Sigma %*% w))))
+  # The interior targets are the actual cross-check. They are wrapped rather
+  # than called bare, and the reason is worth stating: the failure this test is
+  # being fixed for could not be reproduced on the machine fixing it. Locally
+  # only i == n ever fails, on about half of all seeds; on CRAN's
+  # aarch64-apple-darwin23 and on the M1mac service's darwin25 it failed for an
+  # input this machine solves without complaint, and neither reports which i.
+  # Excluding only the vertex would therefore be a guess. Whether solve.QP can
+  # solve a given point is a property of the platform's linear algebra, not of
+  # the package, so a point it declines is skipped and the ones it solves must
+  # still agree. `solved` records which, so a platform where the solver
+  # collapsed entirely cannot masquerade as a pass.
+  solved <- rep(FALSE, n)
+  solved[c(1, n)] <- TRUE
+  for (i in 2:(n - 1)) {
+    w <- tryCatch(
+      quadprog::solve.QP(
+        Sigma, rep(0, N),
+        cbind(rep(1, N), matrix(mu, ncol = 1), diag(N)),
+        c(1, tg[i], rep(0, N)), meq = 2)$solution,
+      error = function(e) NULL)
+    if (!is.null(w)) { W[, i] <- w; solved[i] <- TRUE }
+  }
+  # the cross-check must remain a cross-check
+  expect_gte(sum(solved), n - 2L)
 
-  expect_equal(unname(ef$weights), W, tolerance = 1e-6)
-  expect_equal(unname(ef$volatility), vol, tolerance = 1e-8)
-  expect_equal(unname(ef$expected_returns), as.numeric(crossprod(W, mu)),
+  vol <- apply(W[, solved, drop = FALSE], 2,
+               function(w) sqrt(drop(crossprod(w, Sigma %*% w))))
+
+  expect_equal(unname(ef$weights[, solved, drop = FALSE]),
+               W[, solved, drop = FALSE], tolerance = 1e-6)
+  expect_equal(unname(ef$volatility[solved]), vol, tolerance = 1e-8)
+  expect_equal(unname(ef$expected_returns[solved]),
+               as.numeric(crossprod(W[, solved, drop = FALSE], mu)),
                tolerance = 1e-8)
   expect_equal(ef$targets, tg, tolerance = 1e-10)
   # the maximum-return end point is the vertex, not an interior mix
   expect_equal(max(ef$weights[, n]), 1, tolerance = 1e-8)
+  # and the package solved every point, whatever solve.QP managed
+  expect_true(all(ef$status == "ok"))
 })
 
 # ---- ties for the maximum expected return ----------------------------------
