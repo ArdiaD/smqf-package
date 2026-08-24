@@ -46,7 +46,7 @@
 
   Every other unseeded draw in the suite is seeded too: eleven blocks across
   `test-efficient-frontier.R`, `test-mvsk-portfolio.R` and
-  `test-tail-dependence.R`. The suite now returns 1226 passing assertions and
+  `test-tail-dependence.R`. The suite now returns 1228 passing assertions and
   no failures under every initial RNG state tried, and each file gives the same
   result run alone as in suite order.
 
