@@ -13,9 +13,15 @@ This is a test-only fix for the check failure reported on 1.1-7
     Error in quadprog::solve.QP(...): constraints are inconsistent, no solution!
     [ FAIL 1 | WARN 0 | SKIP 0 | PASS 1221 ]
 
-Every other flavour running 1.1-7 was OK. The failure is genuinely specific to
-that platform, and it is in the test rather than in the package: no exported
-function is involved.
+The M1mac additional-issues service reports the same failure, at the same line
+and with the same assertion counts, under R-devel on aarch64-apple-darwin25.6.0
+with Apple clang 21.0.0.
+
+Every other flavour running 1.1-7 was OK. The failure is in the test rather
+than in the package -- no exported function is involved -- and it is specific
+to recent arm64 toolchains rather than to macOS: the machine used to prepare
+this submission runs the same macOS release (Tahoe 26.6.2) as the M1mac
+service, and does not reproduce it.
 
 The cause is the target grid, which ended at exactly `max(mu)`. The only
 long-only portfolio attaining that return is the vertex `e_argmax`, a
