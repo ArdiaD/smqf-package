@@ -19,19 +19,23 @@ with Apple clang 21.0.0.
 
 Every other flavour running 1.1-7 was OK. The failure is in the test rather
 than in the package -- no exported function is involved -- and it is specific
-to recent arm64 toolchains rather than to macOS: the machine used to prepare
-this submission runs the same macOS release (Tahoe 26.6.2) as the M1mac
-service, and does not reproduce it.
+to recent arm64 R builds rather than to macOS: the same machine reproduces it
+under an R built for darwin23 and does not under one built for darwin20,
+running the same operating system in both cases.
 
-The cause is the target grid, which ended at exactly `max(mu)`. The only
-long-only portfolio attaining that return is the vertex `e_argmax`, a
-degenerate corner of the feasible set where `quadprog::solve.QP` may report
-inconsistent constraints instead of returning the vertex, depending on the
-platform's linear algebra. The assertion counts confirm the input was the same
-on both machines: CRAN's 1221 passes plus the four assertions the aborted test
-never reached equal the 1225 seen locally. `solve.QP` succeeds on
-aarch64-apple-darwin20 with R 4.5.2 and fails on aarch64-apple-darwin23 with
-R 4.6.1 for that identical input.
+The failure has been reproduced exactly. Installing R 4.6.1 for
+aarch64-apple-darwin23 alongside the R 4.5.2 (darwin20) build used previously,
+and running the published 1.1-7 tarball under it, gives byte-for-byte the
+report CRAN sent: the same test, the same line, the same message, and the same
+`[ FAIL 1 | WARN 0 | SKIP 0 | PASS 1221 ]`. The same tarball passes under
+R 4.5.2 on the same machine and the same operating system, so the
+discriminating factor is the R build and its toolchain.
+
+Instrumenting the reproduction identifies the point precisely: of the twenty
+grid points, `solve.QP` refuses exactly one, `i = 20`. That is the last target,
+`tg[20] = max(mu)`, whose only long-only solution is the vertex `e_argmax` -- a
+degenerate corner of the feasible set. Every interior target solves, and so
+does the unconstrained minimum-variance QP.
 
 A second, independent fragility sat behind it: the expected-return vector was
 drawn with `runif()` and never seeded, because the helper that builds the
@@ -47,20 +51,20 @@ vector that fails the same way locally.
   exactly through `pracma::quadprog` with an explicit feasibility check — a
   stronger assertion than the one `solve.QP` was being asked to satisfy.
 * Interior targets still go to `solve.QP`, which is the point of the test, but
-  wrapped. We could not reproduce the failure on the machine fixing it, and
-  neither report says which grid point failed, so excluding only the vertex
-  would be a guess. A point the solver declines is skipped, the points it
-  solves must still agree with the package to 1e-6, and a guard requires at
-  least 18 of the 20 points to have been solved so that a collapsed solver
-  cannot pass silently.
+  wrapped. On both platforms measured, only the vertex is ever refused, so the
+  wrapper is not needed for them; it is there because whether a given point is
+  solvable is a property of the platform's linear algebra rather than of the
+  package, and we have measured two platforms out of the thirteen CRAN runs. A
+  point the solver declines is skipped, the points it solves must still agree
+  with the package to 1e-6, and a guard requires at least 18 of the 20 points
+  to have been solved so that a collapsed solver cannot pass silently.
 * The unseeded draw is seeded, along with eleven others across
   `test-efficient-frontier.R`, `test-mvsk-portfolio.R` and
   `test-tail-dependence.R`.
 
-We are aware this fix is verified by construction rather than by reproduction:
-the package is unable to reach the failing code path on any machine available
-to us. The structure above is intended to be correct whichever grid point the
-solver refuses.
+This submission has been verified on the platform that reported the failure:
+1.1-7 fails and 1.1-8 passes under R 4.6.1 on aarch64-apple-darwin23, with the
+1.1-7 failure identical to the one CRAN reported.
 
 The suite now returns 1228 passing assertions and no failures under every
 initial RNG state tried (seeds 1, 23, 42, 99, 2026, 7777), with an identical
@@ -70,18 +74,20 @@ locally.
 
 ## Test environments
 
+* Local macOS (aarch64-apple-darwin23), R 4.6.1 -- the platform that reported
+  the failure. `R CMD check --as-cran` including the PDF manual: 2 NOTEs, no
+  errors or warnings. The second NOTE is local only, "Skipping checking math
+  rendering: package 'V8' unavailable".
 * Local macOS (aarch64-apple-darwin20), R 4.5.2, `R CMD check --as-cran`
   including the PDF manual
 * Windows (win-builder), R release 4.6.1 and R devel
 
-Note that win-builder offers no macOS arm64 flavour, so none of these
-environments exercises the one that reported the failure. The local machine is
-aarch64 but its R is built for darwin20, and it solves the failing input
-without complaint.
-
 ## R CMD check results
 
 0 errors | 0 warnings | 1 note
+
+(2 notes on the darwin23 build, the second being the local absence of V8 noted
+above.)
 
 ## Notes
 

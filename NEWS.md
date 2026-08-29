@@ -15,12 +15,12 @@
   long-only portfolio attaining that return is the vertex `e_argmax`, a
   degenerate corner of the feasible set where `quadprog::solve.QP` may report
   inconsistent constraints instead of returning the vertex. Whether it does
-  depends on the platform's linear algebra: the failing input reproduces
-  exactly here (the assertion counts line up -- CRAN's 1221 passes plus the
-  four assertions the aborted test never reached equal the 1225 seen locally,
-  so the RNG stream and `mu` were identical), and `solve.QP` succeeds on
-  aarch64-apple-darwin20 with R 4.5.2 while failing on aarch64-apple-darwin23
-  with R 4.6.1.
+  depends on the platform's R build: installing R 4.6.1 for
+  aarch64-apple-darwin23 reproduces CRAN's report byte for byte -- same test,
+  same line, same message, same `PASS 1221` -- on a machine whose R 4.6.1 build
+  fails and whose R 4.5.2 (darwin20) build passes, under one operating system.
+  Instrumenting that reproduction shows `solve.QP` refuses exactly one of the
+  twenty grid points: `i = 20`, the vertex. Every interior target solves.
 
   A second, independent fragility sat behind it: `mu <- runif(5, .002, .006)`
   was drawn without seeding, because the helper `psd_cov()` calls `set.seed()`
