@@ -28,8 +28,15 @@ aarch64-apple-darwin23 alongside the R 4.5.2 (darwin20) build used previously,
 and running the published 1.1-7 tarball under it, gives byte-for-byte the
 report CRAN sent: the same test, the same line, the same message, and the same
 `[ FAIL 1 | WARN 0 | SKIP 0 | PASS 1221 ]`. The same tarball passes under
-R 4.5.2 on the same machine and the same operating system, so the
-discriminating factor is the R build and its toolchain.
+R 4.5.2 on the same machine and the same operating system.
+
+The two builds differ in their linear algebra, which is the likely mechanism:
+the 4.5.2 installation links Apple's Accelerate framework for BLAS, the 4.6.1
+one uses R's reference `libRblas`. That difference is demonstrably enough to
+change results here -- `eigen()` on a matrix with a repeated eigenvalue returns
+the same eigenvalues and a different basis for the eigenspace under the two --
+though we have not isolated it for `solve.QP` specifically, which carries its
+own Fortran.
 
 Instrumenting the reproduction identifies the point precisely: of the twenty
 grid points, `solve.QP` refuses exactly one, `i = 20`. That is the last target,
@@ -80,21 +87,32 @@ locally.
   rendering: package 'V8' unavailable".
 * Local macOS (aarch64-apple-darwin20), R 4.5.2, `R CMD check --as-cran`
   including the PDF manual
-* Windows (win-builder), R release 4.6.1 and R devel
+* Windows (win-builder), R release 4.6.1 -- Status: OK, no notes
+* Windows (win-builder), R devel (2026-08-27 r90452) -- Status: OK, no notes
+
+The test suite was additionally run under both local builds across six initial
+RNG states, giving an identical 1228 passing assertions and no failures in all
+twelve runs. That covers both BLAS implementations, which is the axis the
+original failure turned on.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0-2 notes, depending on the environment:
 
-(2 notes on the darwin23 build, the second being the local absence of V8 noted
-above.)
+* win-builder R release 4.6.1 and R devel: **Status: OK**, no notes.
+* Local darwin23 / R 4.6.1: 2 notes -- "Days since last update" and
+  "Skipping checking math rendering: package 'V8' unavailable", the latter
+  being the absence of V8 in a freshly created library.
+* Local darwin20 / R 4.5.2: 1 note -- "Days since last update".
 
 ## Notes
 
-* `Days since last update`. 1.1-7 was published on 2026-08-23 and the check
-  failure above was reported against it the same day, with a fix-by date of
-  2026-09-13. This submission exists only to clear that failure. We would
-  otherwise not submit again so soon, and we have no further changes planned.
+* `Days since last update` may or may not appear, depending on when the
+  submission is processed: 1.1-7 was published on 2026-08-23, the check failure
+  was reported against it the same day with a fix-by date of 2026-09-13, and
+  win-builder no longer raises the note. Should it appear, the reason is that
+  this submission exists only to clear that failure. We would otherwise not
+  submit again so soon, and we have no further changes planned.
 
 * Several market datasets are ported from the GPL (>= 2)-licensed `qrmdata`
   package (Hofert, Hornik & McNeil) and are redistributed here under the same
